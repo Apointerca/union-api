@@ -1,0 +1,97 @@
+# Data Structure
+
+### Put Review Request (object)
++ rate: 9 (number, required) - Rate of review, range from 0 to 10 inclusive
++ comment: `This is good!` (string, optional) - The markdown text of review comment
+
+### Post Review Request (object)
++ Include (Put Review Request)
++ cid: `321` (number, required) - Identifier of reviewer(client)
++ bid: `222` (number, required) - Identifier of business
+
+### Review Complete Data (object)
++ Include (Put Review Request)
++ rid: `123` (number, required) - Identifier of review
++ bid: `222` (number, required) - Identifier of business profile
++ client (Get Client as guest Response, required)
++ date: `1990-01-01` (string, required) - Date of review
++ like: `99` (number, required) - How many oth"er people like this review
+
+### List of Review Complete Data(object)
++ reviews (array[Review Complete Data], required)
+
+# Group Review
+
+## Review CRUD [/review/{id}]
+
+### Get review by ID [GET]
++ Parameters
+    + id: `12` (number, required) - ID of review
+
++ response 200 (application/json)
+    + Attributes (Review Complete Data)
+
+### Delete review by ID [DELETE]
++ Parameters
+    + id: `12` (number, required) - ID of review
+
++ request
+    + Headers
+
+            Authorization: Authorization-token
+
++ response 204
+
+    + Body
+
+### Update review [PUT]
++ Parameters
+    + id: `12` (number, required) - ID of review
+
++ request
+    + Attributes (Put Review Request)
+    + Headers
+
+            Authorization: Authorization-token
+
++ response 204
+
+    + Body
+
+### Create review [POST]
+
++ request
+    + Attributes (Post Review Request)
+    + Headers
+
+            Authorization: Authorization-token
+
++ response 201
+
+    + Body
+
+## Like Review [/review/{id}/like]
++ Parameters
+    + id: `12` (number, required) - ID of review
+
+### Like a review [POST]
+
++ response 201
+
+    + Body
+
+## List review of business [/business/{id}/review{?pageNumber,pageSize}]
++ Parameters
+    + id: `12` (number, required) - ID of business
+    + pageNumber: `1` (number, optional) - The page to view, start from `1`
+        + Default: `1`
+    + pageSize: `10` (number, optional) - The number of record in each page. The minimum size is `5`.
+        + Default: `10`
+
+### List review of business [GET]
+
+Data is order by review date in descend.
+
++ response 200 (application/json)
+
+    + Attributes (List of Review Complete Data)

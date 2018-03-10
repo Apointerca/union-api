@@ -1,0 +1,72 @@
+# Data Structure
+
+### Get Client as guest Response
++ cid: `123` (number, required) - Identifier of client
++ avatar: `https://host/path` (string, optional) - The avatar of client
++ displayName: `Rugal` (string, optional) - The client set name that to be displayed
+
+### Put Client Request (object)
++ dob: `1990-01-01` (string, optional) - Date of birth
++ email: `test@email.com` (string, optional)
++ phone: `1112223333` (string, optional)
++ gender: `true` (boolean, optional)
++ password: `pass123word` (string, optional)
++ avatar: `https://host/path` (string, optional) - The avatar of client
++ displayName: `Rugal` (string, optional) - The client set name that to be displayed
+
+### Post Client Request (object)
++ Include (Put Client Request)
++ email: `test@email.com` (string, required)
+
+### Client Complete Data (object)
++ Include (Post Client Request)
++ cid: `123` (number, required) - Identifier of client
++ credit: `2` (number, required) - The credit point of client. Begin with 0 point
+
+# Group Client
+
+## Client CRUD [/client/{id}]
+
+### Get client by ID [GET]
++ Parameters
+    + id: `12` (number, required) - ID of client
+
++ response 200 (application/json)
+    + Attributes (Client Complete Data)
+
+### Delete client by ID [DELETE]
++ Parameters
+    + id: `12` (number, required) - ID of client
+
++ request
+    + Headers
+
+            Authorization: Authorization-token
+
++ response 204
+
+    + Body
+
+### Update client [PUT]
++ Parameters
+    + id: `12` (number, required) - ID of client
+
++ request
+    + Attributes (Put Client Request)
+    + Headers
+
+            Authorization: Authorization-token
+
++ response 200 (application/json)
+    + Attributes (Client Complete Data)
+
+### Create client [POST]
+
++ request
+    + Attributes (Post Client Request)
+    + Headers
+
+            Authorization: Authorization-token
+
++ response 201 (application/json)
+    + Attributes (Client Complete Data)
