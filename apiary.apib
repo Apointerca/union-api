@@ -1,0 +1,94 @@
+FORMAT: 1A
+HOST: http://apointer.ca
+
+# API documentation for Union
+
+# Group General
+Please refer to [Decision Graph](http://clojure-liberator.github.io/liberator/assets/img/decision-graph.svg) for details.  
+
+## General HTTP status code
+As HTTP status code contains a lot of information, here we demonstration some of them so we can use them directly in our response.  
+
+### 200
+This is the most common status code. It basically means things are going well.  
+But usually it returns together with response body.  
+Mostly for `GET` request.  
+
+### 201
+This status code indicates the requested resource has been created.  
+Response body should be returned together.  
+Mostly for `POST` request.  
+
+### 204
+Similar to `200`, but nothing would come together with this status.  
+Mostly for `DELETE` and `PUT` requests.  
+
+## General HTTP status error code
+
+To avoid redundent error code declaration, here we list all the default meaning of corresponding error code.  
+Please explicitly in each response if the response is different from what state here.  
+
+### 400
+Malformed request, this request is reported.  
+### 401
+This request is not authorized.  
+### 403
+This request doesn't have permission to access the resource.  
+### 404
+The target resource not found.  
+### 405
+HTTP request method not found.  
+### 406
+The request parameters and headers not acceptable.  
+Please change it according to documentation.  
+### 409
+Usually happens when creating a resource that already exists.  
+
+# Data Structure
+
+## Pagination (object)
++ pageNumber: `1` (number, required) - The current page number, start from `1`
++ pageSize: `10` (number, required) - The number of record in each page. The minimum size is `5`
++ totalPage: `3` (number, required) - The total number of pages, minimum is `1`
+
+# Data Structure
+
+### Get Category Response (object)
++ cid: `1` (number, required) - The ID of category
++ name: `Medical Treatment` (string, required) - The name of category
++ description: `something here` (string, optional)
++ avatar: `http://host/path` (string, optional)
++ parentCid (number, optional) - The parent of this category. Null or blank value indicates this is a root category
++ children (array[number], optional) - A list of category id under this category
+
+# Group Category
+
+## Category CRUD [/category/{id}]
+
+### Get category by ID [GET]
++ Parameters
+    + id: `12` (number, required) - ID of category
+
++ response 200 (application/json)
+    + Attributes (Get Category Response)
+# Data Structure
+
+### Get Business Response (object)
++ bid: `1` (number, required) - The Id of this business
++ name: `Rugal Dental Clinic` (string, required)
++ phone: `1234567890` (string, required)
++ email: `test@email.com` (string, required)
++ backgroundImage: `http://host/path` (string, optional) - The background image of this business
++ avatar: `http://host/path` (string, optional) - The avatar of this business
++ website: `http://host/path` (string, optional) - The URL of this business
+
+# Group Business
+
+## Business CRUD [/business/{id}]
+
+### Get business by ID [GET]
++ Parameters
+    + id: `1` (number, required) - ID of business
+
++ response 200 (application/json)
+    + Attributes (Get Business Response)
