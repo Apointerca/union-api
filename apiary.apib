@@ -76,11 +76,16 @@ Usually happens when creating a resource that already exists.
 ### Get Business Response (object)
 + bid: `1` (number, required) - The Id of this business
 + name: `Rugal Dental Clinic` (string, required)
-+ phone: `1234567890` (string, required)
-+ email: `test@email.com` (string, required)
++ phone: `1234567890` (string, optional)
++ email: `test@email.com` (string, optional)
 + backgroundImage: `http://host/path` (string, optional) - The background image of this business
 + avatar: `http://host/path` (string, optional) - The avatar of this business
 + website: `http://host/path` (string, optional) - The URL of this business
+
+### Save Business Request (object)
++ name: `Rugal Auto Service` (string, required)
++ license: `123-3321-2123-3321` (string, required)
++ uid: `13` (number, required) - The Uid of the business owner
 
 # Group Business
 
@@ -92,3 +97,50 @@ Usually happens when creating a resource that already exists.
 
 + response 200 (application/json)
     + Attributes (Get Business Response)
+
+### Save business [POST]
+
++ request
+    + Attributes (Save Business Request)
+
++ response 201 (application/json)
+    + Attributes (Get Business Response)
+# Data Structure
+
+### Address Response (object)
++ aid: `23` (number, required) - The Id of address
++ line1: `123 test rd` (string, required)
++ line2: `special line` (string, optional)
++ city: `Toronto` (string, required)
++ province: `Ontario` (string, required)
++ country: `Canada` (string, required)
++ zip: `X0X0X0` (string, required)
+
+### Business Hour Response (object)
++ weekDay: `1` (number, required) - The day of a week, from 1 to 7 to indicate from Monday to Sunday
++ beginAt: `900` (number, required) - The begin time of store, the number consists with hour and minute
++ endAt: `1630` (number, required) - The end time of store, the number consists with hour and minute
+
+### Get Store Response (object)
++ sid: `1` (number, required) - The Id of this Store
++ cid: `3` (number, required) - The category Id of this store
++ bid: `6` (number, required) - The business Id of this store
++ timezone: `-4` (number, required)
++ address (Address Response, required)
++ businessHours (array[Business Hour Response], fixed) - A list of business hour of this store, order by day of week
++ name: `Rugal Dental Clinic` (string, required)
++ phone: `1234567890` (string, required)
++ email: `test@email.com` (string, required)
++ website: `http://host.com` (string, optional)
+
+# Group Store
+
+## Store CRUD [/store/{id}]
+
+### Get Store by ID [GET]
++ Parameters
+    + id: `1` (number, required) - ID of Store
+
++ response 200 (application/json)
+    + Attributes (Get Store Response)
+

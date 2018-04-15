@@ -4,9 +4,7 @@ review.apib
 index.apib
 business.apib
 employee.apib
-member.apib
 service.apib
-service_category.apib
-status.apib
 appointment.apib
 category.apib
+store.apib
