@@ -87,6 +87,10 @@ Usually happens when creating a resource that already exists.
 + license: `123-3321-2123-3321` (string, required)
 + uid: `13` (number, required) - The Uid of the business owner
 
+### Create Business Along With First Store (object)
++ sid: `2` (number, required) - The Id of store
++ businessId: `1` (number, required) - The Id of business associated with the store
+
 # Group Business
 
 ## Business CRUD [/business/{id}]
@@ -99,12 +103,15 @@ Usually happens when creating a resource that already exists.
     + Attributes (Get Business Response)
 
 ### Save business [POST]
+Create the business along with the first store and full permission workspace.  
+This should only be called after verifying business information.  
 
 + request
     + Attributes (Save Business Request)
 
 + response 201 (application/json)
-    + Attributes (Get Business Response)
+    + Attributes (Create Business Along With First Store)
+
 # Data Structure
 
 ### Address Response (object)
