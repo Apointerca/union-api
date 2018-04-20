@@ -91,6 +91,10 @@ Usually happens when creating a resource that already exists.
 + sid: `2` (number, required) - The Id of store
 + businessId: `1` (number, required) - The Id of business associated with the store
 
+### Get Stores (object)
++ sid: `2` (number, required) - The Id of store
++ name: `Rugal Automobile Yonge Finch shop` (string, optional)
+
 # Group Business
 
 ## Business CRUD [/business/{id}]
@@ -112,6 +116,14 @@ This should only be called after verifying business information.
 + response 201 (application/json)
     + Attributes (Create Business Along With First Store)
 
+## Store under Business Operation [/business/{id}/store]
+
+### Get Store Under Business [GET]
++ Parameters
+    + id: `1` (number, required) - ID of business
+
++ response 200 (application/json)
+    + Attributes (array[Get Stores], fixed)
 # Data Structure
 
 ### Address Response (object)
