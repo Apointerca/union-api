@@ -142,6 +142,14 @@ This should only be called after verifying business information.
     + Attributes (array[Get Stores], fixed)
 # Data Structure
 
+### Update Address (object)
++ line1: `123 test rd` (string, optional)
++ line2: `special line` (string, optional)
++ city: `Toronto` (string, optional)
++ province: `Ontario` (string, optional)
++ country: `Canada` (string, optional)
++ zip: `X0X0X0` (string, optional)
+
 ### Address Response (object)
 + aid: `23` (number, required) - The Id of address
 + line1: `123 test rd` (string, required)
@@ -168,6 +176,15 @@ This should only be called after verifying business information.
 + email: `test@email.com` (string, required)
 + website: `http://host.com` (string, optional)
 
+### Update Store Request (object)
++ cid: `3` (number, optional) - The category Id of this store
++ timezone: `-1` (number, optional)
++ address (Update Address, optional)
++ name: `Rugal Dental Clinic` (string, optional)
++ phone: `1234567890` (string, optional)
++ email: `test@email.com` (string, optional)
++ website: `http://host.com` (string, optional)
+
 # Group Store
 
 ## Store CRUD [/store/{id}]
@@ -178,4 +195,14 @@ This should only be called after verifying business information.
 
 + response 200 (application/json)
     + Attributes (Get Store Response)
+
+### Update Store by ID [PUT]
++ Parameters
+    + id: `1` (number, required) - ID of Store
+
++ request
+    + Attributes (Update Store Request)
+
++ response 204
+    + Body
 
