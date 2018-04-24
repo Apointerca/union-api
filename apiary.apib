@@ -206,3 +206,27 @@ This should only be called after verifying business information.
 + response 204
     + Body
 
+# Data Structure
+
+### Get Store Of Employee (object)
++ sid: `123` (number, required) - Identifier of store
++ name: `Rugal Dental` (string, required) - The name of this store
++ permission: 1, 1, 2, 0, 1 (array[number], required) - The permission set of the employee in this store, index from 0 to 4 indicates `BUSINESS_INFO(0)`, `CALENDAR(1)`, `SERVICE(2)`, `CUSTOMER(3)`, `EMPLOYEE(4)` respectively. With `0` in the array means `No Permission`, `1` represents `Read-Only` and `2` is `Read-Write` permission.
+
+
+### Get Employee brief response (object)
++ uid: `123` (number, required) - Identifier of employee
++ avatar: `https://host/path` (string, optional) - The avatar of employee
++ displayName: `Rugal` (string, optional) - The employee set name that to be displayed
++ title: `admin` (string, required) - The title of this employee in business
+
+# Group Employee
+
+## Employee Related Operations [/employee/{id}/store]
+
+### List stores of employee [GET]
++ Parameters
+    + id: `12` (number, required) - ID of employee
+
++ response 200 (application/json)
+    + Attributes (array[Get Store Of Employee], fixed)
