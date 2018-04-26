@@ -260,11 +260,13 @@ This means Aws S3 is down.
 
 # Group Employee
 
-## Employee Related Operations [/employee/{id}/store]
+## Employee Related Operations [/employee/store]
 
 ### List stores of employee [GET]
-+ Parameters
-    + id: `12` (number, required) - ID of employee
++ request
+    + Headers
+
+            uid: {uid}
 
 + response 200 (application/json)
     + Attributes (array[Get Store Of Employee], fixed)
