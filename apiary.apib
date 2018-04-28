@@ -53,13 +53,17 @@ Usually happens when creating a resource that already exists.
 
 # Data Structure
 
+### Get Simple Category (object)
++ cid: `10` (number, required) - The ID of category
++ name: `The test` (string, required) - The name of category
+
 ### Get Category Response (object)
 + cid: `1` (number, required) - The ID of category
 + name: `Medical Treatment` (string, required) - The name of category
 + description: `something here` (string, optional)
 + avatar: `http://host/path` (string, optional)
 + parentCid (number, optional) - The parent of this category. Null or blank value indicates this is a root category
-+ children (array[number], optional) - A list of category id under this category
++ children (array[Get Simple Category], fixed) - A list of sub-category under current category
 
 # Group Category
 
@@ -71,11 +75,19 @@ Usually happens when creating a resource that already exists.
 
 + response 200 (application/json)
     + Attributes (Get Category Response)
+
+## Root Category [/category]
+
+### Get all root category [GET]
+
++ response 200 (application/json)
+    + Attributes (array[Get Simple Category], fixed)
 # Data Structure
 
 ### Get Business Response (object)
 + bid: `1` (number, required) - The Id of this business
 + name: `Rugal Dental Clinic` (string, required)
++ license: `123-3321-2123-3321` (string, required)
 + phone: `1234567890` (string, optional)
 + email: `test@email.com` (string, optional)
 + backgroundImage: `http://host/path` (string, optional) - The background image of this business
