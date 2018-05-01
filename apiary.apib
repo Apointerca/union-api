@@ -272,6 +272,40 @@ This means Aws S3 is down.
     + Body
 # Data Structure
 
+### Service Base (object)
++ price: `29.99` (number, required) - The price of this service per hour
++ duration: `30` (number, required) - The duration of this service in minute
++ css: `color:FFFFFF` (string, optional) - The CSS of this service
++ status: `2` (number, optional) - The status of this service, `0 - Offline`, `1 - Readonly`, `2 - Online`
+
+### Save Service Request (object)
++ cid (number, required) - The category Id of this service
++ Include (Service Base)
+
+### Get Service Response (object)
++ sid: `1` (number, required) - Identifier of service
++ name (string, required)
++ Include (Service Base)
++ categoryId (number, required) - The category Id of this service
++ storeId (number, required) - The store Id of this service
+
+
+# Group Service
+
+## Service for Store [/store/{sid}/service]
+
+### Create Service for Store [POST]
++ Parameters
+    + sid: `1` (number, required) - Id of store
+
++ request
+    + Attributes (Save Service Request)
+
++ response 201 (application/json)
+    + Attributes (Get Service Response)
+
+# Data Structure
+
 ### Get Store Of Employee (object)
 + sid: `123` (number, required) - Identifier of store
 + bid: `3` (number, required) - Identifier of business that the store under of
