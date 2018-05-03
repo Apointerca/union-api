@@ -200,6 +200,8 @@ This means Aws S3 is down.
 + province: `Ontario` (string, required)
 + country: `Canada` (string, required)
 + zip: `X0X0X0` (string, required)
++ longitude: `12.34` (number, optional)
++ latitude: `21.43` (number, optional)
 
 ### Business Hour Response (object)
 + weekDay: `3` (number, required) - The day in one week, from `1` to `7` to indicate `Monday` to `Sunday`
@@ -214,6 +216,7 @@ This means Aws S3 is down.
 + address (Address Response, required)
 + businessHours (array[Business Hour Response], fixed) - A list of business hour of this store, order by day of week
 + name: `Rugal Dental Clinic` (string, required)
++ description: `This is description` (string, optional)
 + phone: `1234567890` (string, required)
 + email: `test@email.com` (string, required)
 + website: `http://host.com` (string, optional)
@@ -223,6 +226,7 @@ This means Aws S3 is down.
 + timezone: `-1` (number, optional)
 + address (Update Address, optional)
 + name: `Rugal Dental Clinic` (string, optional)
++ description: `This is description` (string, optional)
 + phone: `1234567890` (string, optional)
 + email: `test@email.com` (string, optional)
 + website: `http://host.com` (string, optional)
@@ -277,10 +281,21 @@ This means Aws S3 is down.
 + duration: `30` (number, required) - The duration of this service in minute
 + css: `color:FFFFFF` (string, optional) - The CSS of this service
 + status: `2` (number, optional) - The status of this service, `0 - Offline`, `1 - Readonly`, `2 - Online`
++ description: `This is description` (string, optional)
++ name: `This is name` (string, required)
 
 ### Save Service Request (object)
 + cid (number, required) - The category Id of this service
 + Include (Service Base)
+
+### Update Service Request (object)
++ cid (number, optional) - The category Id of this service
++ price: `29.99` (number, optional) - The price of this service per hour
++ duration: `30` (number, optional) - The duration of this service in minute
++ css: `color:FFFFFF` (string, optional) - The CSS of this service
++ status: `2` (number, optional) - The status of this service, `0 - Offline`, `1 - Readonly`, `2 - Online`
++ description: `This is description` (string, optional)
++ name: `This is name` (string, optional)
 
 ### Get Service Response (object)
 + sid: `1` (number, required) - Identifier of service
@@ -316,6 +331,13 @@ This means Aws S3 is down.
     + sid: `1` (number, required) - Id of service
 
 ### Get Service [GET]
+
++ response 200 (application/json)
+    + Attributes (Get Service Response)
+
+### Update Service [PUT]
++ request
+    + Attributes (Update Service Request)
 
 + response 200 (application/json)
     + Attributes (Get Service Response)
