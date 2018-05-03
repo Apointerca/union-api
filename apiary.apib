@@ -294,9 +294,10 @@ This means Aws S3 is down.
 
 ## Service for Store [/store/{sid}/service]
 
-### Create Service for Store [POST]
 + Parameters
     + sid: `1` (number, required) - Id of store
+
+### Create Service for Store [POST]
 
 + request
     + Attributes (Save Service Request)
@@ -304,6 +305,10 @@ This means Aws S3 is down.
 + response 201 (application/json)
     + Attributes (Get Service Response)
 
+### Get services under Store [GET]
+
++ response 200 (application/json)
+    + Attributes (array[Get Service Response], fixed)
 
 ## Service Operation [/service/{sid}]
 
