@@ -57,12 +57,15 @@ Usually happens when creating a resource that already exists.
 + cid: `10` (number, required) - The ID of category
 + name: `The test` (string, required) - The name of category
 
-### Get Category Response (object)
-+ cid: `1` (number, required) - The ID of category
+### Save Category Request (object)
 + name: `Medical Treatment` (string, required) - The name of category
 + description: `something here` (string, optional)
 + avatar: `http://host/path` (string, optional)
 + parentCid (number, optional) - The parent of this category. Null or blank value indicates this is a root category
+
+### Get Category Response (object)
++ cid: `1` (number, required) - The ID of category
++ Include (Save Category Request)
 + children (array[Get Simple Category], fixed) - A list of sub-category under current category
 
 # Group Category
@@ -82,6 +85,15 @@ Usually happens when creating a resource that already exists.
 
 + response 200 (application/json)
     + Attributes (array[Get Simple Category], fixed)
+
+### Save category [POST]
+
++ request
+    + Attributes (Save Category Request)
+
++ response 201 (application/json)
+    + Attributes (Get Category Response)
+
 # Data Structure
 
 ### Get Business Response (object)
