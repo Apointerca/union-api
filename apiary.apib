@@ -228,6 +228,7 @@ This means Aws S3 is down.
 + address (Address Response, required)
 + businessHours (array[Business Hour Response], fixed) - A list of business hour of this store, order by day of week
 + name: `Rugal Dental Clinic` (string, required)
++ url: `rugal-test-store` (string, required)
 + description: `This is description` (string, optional)
 + phone: `1234567890` (string, required)
 + email: `test@email.com` (string, required)
@@ -358,7 +359,7 @@ This means Aws S3 is down.
 
 ### Get Store Of Employee (object)
 + sid: `123` (number, required) - Identifier of store
-+ bid: `3` (number, required) - Identifier of business that the store under of
++ url: `rugal-test-store` (string, required)
 + name: `Rugal Dental` (string, required) - The name of this store
 + permission: 1, 1, 2, 0, 1 (array[number], required) - The permission set of the employee in this store, index from 0 to 4 indicates `BUSINESS_INFO(0)`, `CALENDAR(1)`, `SERVICE(2)`, `CUSTOMER(3)`, `EMPLOYEE(4)` respectively. With `0` in the array means `No Permission`, `1` represents `Read-Only` and `2` is `Read-Write` permission.
 
