@@ -327,6 +327,10 @@ This indicates the specified URL is not valid, please follow the format `[a-z0-9
 + categoryId (number, required) - The category Id of this service
 + storeId (number, required) - The store Id of this service
 
+### Get Service Case Response (object)
++ scid: `1` (number, required) - Identifier of service case
++ uid: `1` (number, required) - Identifier of user
++ serviceId: `1` (number, required) - Identifier of service
 
 # Group Service
 
@@ -371,6 +375,15 @@ This operation will only soft delete the service.
 + response 204
     + Body
 
+## Service Case CRUD [/service/{sid}/employee/{uid}]
++ Parameters
+    + sid: `1` (number, required) - Id of service
+    + uid: `2` (number, required) - Id of user
+
+### Save Service Case for Employee [POST]
+
++ response 201 (application/json)
+    + Attributes (Get Service Case Response)
 # Data Structure
 
 ### Get Store Of Employee (object)
