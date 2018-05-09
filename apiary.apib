@@ -375,7 +375,7 @@ This operation will only soft delete the service.
 + response 204
     + Body
 
-## Service Case CRUD [/service/{sid}/employee/{uid}]
+## Save Service Case [/service/{sid}/employee/{uid}]
 + Parameters
     + sid: `1` (number, required) - Id of service
     + uid: `2` (number, required) - Id of user
@@ -384,6 +384,17 @@ This operation will only soft delete the service.
 
 + response 201 (application/json)
     + Attributes (Get Service Case Response)
+
+## Service Case CRUD [/service-case/{scid}]
+
++ Parameters
+    + scid: `1` (number, required) - Id of service case
+
+### Delete Service Case [DELETE]
+
++ response 204
+    + Body
+
 # Data Structure
 
 ### Get Store Of Employee (object)
