@@ -239,6 +239,7 @@ This means Aws S3 is down.
 + timezone: `-1` (number, optional)
 + address (Update Address, optional)
 + name: `Rugal Dental Clinic` (string, optional)
++ url: `rugal-test-shop` (string, optional) - A dash separated all lower case string, leave it null or stay it the same with previous one if you do not want to change it
 + description: `This is description` (string, optional)
 + phone: `1234567890` (string, optional)
 + email: `test@email.com` (string, optional)
@@ -267,6 +268,15 @@ This means Aws S3 is down.
 
 + response 200
     + Attributes (Get Store Response)
+
++ response 303
+This indicates the specified URL already exists, please choose another one
+    + Body
+
++ response 400
+This indicates the specified URL is not valid, please follow the format `[a-z0-9]+(-[a-z0-9]+)*`
+    + Body
+
 
 ## Store under Business [/business/{bid}/store]
 + Parameters
