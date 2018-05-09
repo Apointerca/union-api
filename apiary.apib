@@ -375,6 +375,15 @@ This operation will only soft delete the service.
 + response 204
     + Body
 
+## Employee under Service [/service/{sid}/employee]
++ Parameters
+    + sid: `1` (number, required) - Id of service
+
+### Get Employee under Service [GET]
+
++ response 200 (application/json)
+    + Attributes (array[Get Service Case Response], fixed)
+
 ## Save Service Case [/service/{sid}/employee/{uid}]
 + Parameters
     + sid: `1` (number, required) - Id of service
@@ -422,3 +431,13 @@ This operation will only soft delete the service.
 
 + response 200 (application/json)
     + Attributes (array[Get Store Of Employee], fixed)
+
+
+## Service Under Employee [/employee/{uid}/service]
++ Parameters
+    + uid: `1` (number, required) - Id of user
+
+### Get Service under Employee [GET]
+
++ response 200 (application/json)
+    + Attributes (array[Get Service Case Response], fixed)
