@@ -5,6 +5,7 @@ index.apib
 business.apib
 employee.apib
 service.apib
+service_case.apib
 appointment.apib
 category.apib
 store.apib
