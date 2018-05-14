@@ -454,3 +454,34 @@ This operation will only soft delete the service.
 
 + response 200 (application/json)
     + Attributes (array[Get Service Case Response], fixed)
+
+# Data Structure
+
+### Check Availability Request (object)
++ serviceId: `999` (number, required) - Id of service
++ pivotTime: `1521682344` (number, required) - Unix timestamp of appointment start time
++ employeeId: `123` (number, optional) - Id of employee
+
+### Check Availability Employee Response (object)
++ uid: `123` (number, required) - Id of employee
++ firstName: `Rugal` (string, required)
++ lastName: `Bernstein` (string, required)
++ gender: `true` (boolean, required) - `true` : male, `false` female
++ dob: `1521682344` (number, optional) - Unix timestamp of dob
+
+### Check Availability Response (object)
++ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
++ employee (Check Availability Employee Response, required) - The employee to carry on the service
+
+# Group Appointment
+
+## Appointment API [/appointment/availability]
+
+### Check Appointment Availability [POST]
+
++ request
+    + Attributes (Check Availability Request)
+
++ response 200
+    + Attributes (array[Check Availability Response], fixed)
