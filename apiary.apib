@@ -327,9 +327,13 @@ This indicates the specified URL is not valid, please follow the format `[a-z0-9
 + categoryId (number, required) - The category Id of this service
 + storeId (number, required) - The store Id of this service
 
+### Get Service Response With Employee (object)
++ Include (Get Service Response)
++ employees (array[Check Availability Employee Response], optional) - Employees that provide this service
+
 # Group Service
 
-## Service for Store [/store/{sid}/service]
+## Service for Store [/store/{sid}/service{?withEmployee,permission}]
 
 + Parameters
     + sid: `1` (number, required) - Id of store
@@ -343,9 +347,14 @@ This indicates the specified URL is not valid, please follow the format `[a-z0-9
     + Attributes (Get Service Response)
 
 ### Get services under Store [GET]
++ Parameters
+    + withEmployee: `false` (boolean, optional) - Whether to include employees basic information
+        + Default: `false`
+    + permission: `2` (number, optional) - The permission to search with
+        + Default: `2`
 
 + response 200 (application/json)
-    + Attributes (array[Get Service Response], fixed)
+    + Attributes (array[Get Service Response With Employee], fixed)
 
 ## Service Operation [/service/{sid}]
 
