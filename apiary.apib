@@ -466,11 +466,6 @@ This operation will only soft delete the service.
 
 # Data Structure
 
-### Check Availability Request (object)
-+ serviceId: `999` (number, required) - Id of service
-+ pivotTime: `1521682344` (number, required) - Unix timestamp of appointment start time
-+ employeeId: `123` (number, optional) - Id of employee
-
 ### Check Availability Employee Response (object)
 + uid: `123` (number, required) - Id of employee
 + firstName: `Rugal` (string, required)
@@ -483,16 +478,20 @@ This operation will only soft delete the service.
 ### Check Availability Response (object)
 + beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
 + endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
++ scid: `23` (number, required) - Id of Service Case
 + employee (Check Availability Employee Response, required) - The employee to carry on the service
 
 # Group Appointment
 
-## Appointment API [/appointment/availability]
+## Appointment API [/appointment{?serviceId,from,to,employeeId}]
 
-### Check Appointment Availability [POST]
-
-+ request
-    + Attributes (Check Availability Request)
+### Check Appointment Availability [GET]
++ Parameters
+    + serviceId: `999` (number, required) - Id of service
+    + from: `1521682344` (number, required) - Search start time in `second` unit
+    + to: `1521682360` (number, required) - Search end time in `second` unit
+    + employeeId: `123` (number, optional) - Id of employee
 
 + response 200
     + Attributes (array[Check Availability Response], fixed)
+
