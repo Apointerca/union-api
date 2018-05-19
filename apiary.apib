@@ -516,17 +516,27 @@ This operation will only soft delete the service.
 
 ## Appointment API [/appointment/{aid}]
 
-### Cancel Appointment [DELETE]
-Cancel Appointment only when it is confirmed.
-
 + Parameters
     + aid: `999` (number, required) - Id of Appointment
+
+### Cancel Appointment [DELETE]
+Cancel Appointment only when it is confirmed.
 
 + response 204
     + Body
 
-
 + response 304
 If this appointment is not in CONFIRM status.
+
+    + Body
+
+### Confirm Appointment [PUT]
+Confirm Appointment with corresponding customer information.
+
++ response 200 (application/json)
+    + Attributes (Hold Appointment Response)
+
++ response 304
+If this appointment is already in CONFIRM status.
 
     + Body
