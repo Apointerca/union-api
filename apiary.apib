@@ -481,6 +481,17 @@ This operation will only soft delete the service.
 + scid: `23` (number, required) - Id of Service Case
 + employee (Check Availability Employee Response, required) - The employee to carry on the service
 
+### Hold Appointment Request (object) 
++ from: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ scid: `23` (number, required) - Id of Service Case
+
+### Hold Appointment Response (object)
++ aid: `23` (number, required) - Id of Appointment
++ scid: `23` (number, required) - Id of Service Case
++ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
++ status: `1` (number, required) - 0: Cancel, 1: Hold, 2:Confirm
+
 # Group Appointment
 
 ## Appointment API [/appointment{?serviceId,from,to,employeeId}]
@@ -494,4 +505,13 @@ This operation will only soft delete the service.
 
 + response 200
     + Attributes (array[Check Availability Response], fixed)
+
+
+### Create and Hold Appointment [POST]
+
++ request
+    + Attributes (Hold Appointment Request)
+
++ response 201 (application/json)
+    + Attributes (Hold Appointment Response)
 
