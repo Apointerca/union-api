@@ -494,7 +494,7 @@ This operation will only soft delete the service.
 
 # Group Appointment
 
-## Appointment API [/appointment{?serviceId,from,to,employeeId}]
+## Query Appointment [/appointment{?serviceId,from,to,employeeId}]
 
 ### Check Appointment Availability [GET]
 + Parameters
@@ -503,9 +503,8 @@ This operation will only soft delete the service.
     + to: `1521682360` (number, required) - Search end time in `second` unit
     + employeeId: `123` (number, optional) - Id of employee
 
-+ response 200
++ response 200 (application/json)
     + Attributes (array[Check Availability Response], fixed)
-
 
 ### Create and Hold Appointment [POST]
 
@@ -515,3 +514,19 @@ This operation will only soft delete the service.
 + response 201 (application/json)
     + Attributes (Hold Appointment Response)
 
+## Appointment API [/appointment/{aid}]
+
+### Cancel Appointment [DELETE]
+Cancel Appointment only when it is confirmed.
+
++ Parameters
+    + aid: `999` (number, required) - Id of Appointment
+
++ response 204
+    + Body
+
+
++ response 304
+If this appointment is not in CONFIRM status.
+
+    + Body
