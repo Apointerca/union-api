@@ -250,18 +250,27 @@ This means Aws S3 is down.
 
 # Group Store
 
-## Store CRUD [/store/{id}]
+## Get Store Details [/store?sid={sid}&url={url}]
 
-### Get Store by ID [GET]
+### Get by ID [GET]
 + Parameters
-    + id: `1` (number, required) - ID of Store
+    + sid: `1` (number, required) - ID of Store
 
 + response 200 (application/json)
     + Attributes (Get Store Response)
 
-### Update Store by ID [PUT]
+### Get by URL [GET]
 + Parameters
-    + id: `1` (number, required) - ID of Store
+    + url: `rugal-test-store` (string, required) - URL of Store
+
++ response 200 (application/json)
+    + Attributes (Get Store Response)
+
+## Update Store Details [/store/{sid}]
+
+### Update by ID [PUT]
++ Parameters
+    + sid: `1` (number, required) - ID of Store
 
 + request
     + Attributes (Update Store Request)
@@ -297,6 +306,7 @@ This indicates the specified URL is not valid, please follow the format `[a-z0-9
 
 + response 204 (application/json)
     + Body
+
 # Data Structure
 
 ### Service Base (object)
