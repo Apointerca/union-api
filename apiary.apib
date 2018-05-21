@@ -435,34 +435,148 @@ This operation will only soft delete the service.
 + name: `Rugal Dental` (string, required) - The name of this store
 + permission: 1, 1, 2, 0, 1 (array[number], required) - The permission set of the employee in this store, index from 0 to 4 indicates `BUSINESS_INFO(0)`, `CALENDAR(1)`, `SERVICE(2)`, `CUSTOMER(3)`, `EMPLOYEE(4)` respectively. With `0` in the array means `No Permission`, `1` represents `Read-Only` and `2` is `Read-Write` permission.
 
+### Output Employee Response (object)
++ uid: 1 (number, required) - Id of an existing employee
 
-### Get Employee brief response (object)
-+ uid: `123` (number, required) - Identifier of employee
-+ avatar: `https://host/path` (string, optional) - The avatar of employee
-+ displayName: `Rugal` (string, optional) - The employee set name that to be displayed
-+ title: `admin` (string, required) - The title of this employee in business
+### Get Employees Response (Output Employee Response)
++ Include Create Employee Request
+
+### Create Employee Request (object)
++ firstName: `Jasper` (string, required) - The first name of the existing employee to be displayed at Summerhill
++ lastName: `Zhao` (string, required) - The last name of the existing employee to be displayed at Summerhill
++ email: `employee@apointer.ca` (string, required) - The work email of the existing employee to be displayed at Summerhill
++ phone: `4167895678` (string, optional) - The work phone number of the existing employee to be displayed at Summerhill
++ avatar: `http://amazon.s3.com/avatar.img` (string, optional) - The Amazon S3 public url to access the existing employee's work avatar
++ title: `Dr. Jasper` (string, required) - The work tile of the existing employee to be displayed at Summerhill
++ description: `Have 5 years experience` (string, required) - The work description of the existing employee to be displayed at Summerhill
++ showOnPage: 1 (number, required) - Whether display this employee at Summerhill (1 - display, 0 - not display)
++ permission: 2, 1, 1, 1, 1 (array[number], required) - The permission of the existing employee at Wellesley
++ services: 1, 2, 3, 4, 5, 6 (array[number], optional) - The list of ids of services an existing employee is able to offer at a particular store
+
+### Update Employee Request (Output Employee Response)
++ firstName: `Jasper` (string, optional) - The new first name of this existing employee to be displayed at Summerhill
++ lastName: `Zhao` (string, optional) - The new last name of this existing employee to be displayed at Summerhill
++ email: `employee@apointer.ca` (string, optional) - The new work email of this existing employee to be displayed at Summerhill
++ phone: `4167895678` (string, optional) - The new work phone number of this existing employee to be displayed at Summerhill
++ avatar: `http://amazon.s3.com/avatar.img` (string, optional) - The Amazon S3 public url to access this existing employee's new work avatar
++ title: `Dr. Jasper` (string, optional) - The new work tile of this existing employee to be displayed at Summerhill
++ description: `Have 5 years experience` (string, optional) - The new work description of this existing employee to be displayed at Summerhill
++ showOnPage: 1 (number, optional) - The new status of whether display this employee at Summerhill (1 - display, 0 - not display)
++ permission: 2, 1, 1, 1, 1 (array[number], optional) - The new permission of this existing employee at Wellesley
++ services: 1, 2, 3, 4, 5, 6 (array[number], optional) - The new list of ids of services this existing employee is able to offer at a particular store
 
 # Group Employee
 
-## Employee Related Operations [/employee/store]
+## Employee Related Stores [/employee/store]
 
 ### List stores of employee [GET]
 + request
+
     + Headers
 
             uid: {uid}
 
 + response 200 (application/json)
+
     + Attributes (array[Get Store Of Employee], fixed)
 
 ## Service of Employee [/employee/{uid}/service]
 + Parameters
+
     + uid: `1` (number, required) - Id of user
 
 ### Get Service of Employee [GET]
 
 + response 200 (application/json)
+
     + Attributes (array[Get Service Case Response], fixed)
+
+## Employees of Store [/employee/store/{sid}]
++ Parameters
+
+    + sid: 1 (number, required) - Id of a store
+
+### Get Employees of a Store [GET]
+
++ response 200 (application/json)
+Return the information details of all employees working at this store
+
+    + Attributes (array[Get Employees Response], fixed)
+
++ response 404
+No employees are found at this store or the requested store does not exist
+
+    + Body
+
+## An Employee of Store [/employee]
+
+### Create a New Employee at a Store [POST]
+
++ request (application/json)
+
+    + Attributes (Create Employee Request)
+
+    + Headers
+
+            sid: 1 (number, required) - Id of a store
+
++ response 201 (application/json)
+Successfully created a new employee at the particular store and his/her information details are returned
+
+    + Attributes (Get Employees Response)
+
++ response 404
+The requested store does not exist
+
+    + Body
+
++ response 409
+The new employee already exists at this store
+
+    + Body
+
++ response 500
+The new employee failed to be created at Dundas. Therefore, Union also failed to create this new employee
+
+    + Body
+
+### Update an Existing Employee at a Store [PUT]
+
++ request (application/json)
+
+    + Attributes (Update Employee Request)
+
+    + Headers
+
+            sid: 1 (number, required) - Id of a store
+
++ response 201 (application/json)
+The information of the existing employee is updated and his/her new details are returned
+
+    + Attributes (Get Employees Response)
+
++ response 404
+No employee is found or the requested store does not exist
+
+    + Body
+
+## Delete an Employee from a Store [/employee/{uid}/store/{sid}]
++ parameters
+
+    + uid: 1 (number, required) - Id of an existing employee
+    + sid: 1 (number, required) - Id of an existing store
+
+### Delete Employee [DELETE]
+
++ response 200 (application/json)
+The given employee is deleted from the particular store and his/her old details are returned
+
+    + Attributes (Get Employees Response)
+
++ response 404
+No employee is found or the given store does not exist
+
+    + Body
 
 # Data Structure
 
