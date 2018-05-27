@@ -4,45 +4,45 @@ HOST: http://apointer.ca
 # API documentation for Union
 
 # Group General
-Please refer to [Decision Graph](http://clojure-liberator.github.io/liberator/assets/img/decision-graph.svg) for details.  
+Please refer to [Decision Graph](http://clojure-liberator.github.io/liberator/assets/img/decision-graph.svg) for details.
 
 ## General HTTP status code
-As HTTP status code contains a lot of information, here we demonstration some of them so we can use them directly in our response.  
+As HTTP status code contains a lot of information, here we demonstration some of them so we can use them directly in our response.
 
 ### 200
-This is the most common status code. It basically means things are going well.  
-But usually it returns together with response body.  
-Mostly for `GET` request.  
+This is the most common status code. It basically means things are going well.
+But usually it returns together with response body.
+Mostly for `GET` request.
 
 ### 201
-This status code indicates the requested resource has been created.  
-Response body should be returned together.  
-Mostly for `POST` request.  
+This status code indicates the requested resource has been created.
+Response body should be returned together.
+Mostly for `POST` request.
 
 ### 204
-Similar to `200`, but nothing would come together with this status.  
-Mostly for `DELETE` and `PUT` requests.  
+Similar to `200`, but nothing would come together with this status.
+Mostly for `DELETE` and `PUT` requests.
 
 ## General HTTP status error code
 
-To avoid redundent error code declaration, here we list all the default meaning of corresponding error code.  
-Please explicitly in each response if the response is different from what state here.  
+To avoid redundent error code declaration, here we list all the default meaning of corresponding error code.
+Please explicitly in each response if the response is different from what state here.
 
 ### 400
-Malformed request, this request is reported.  
+Malformed request, this request is reported.
 ### 401
-This request is not authorized.  
+This request is not authorized.
 ### 403
-This request doesn't have permission to access the resource.  
+This request doesn't have permission to access the resource.
 ### 404
-The target resource not found.  
+The target resource not found.
 ### 405
-HTTP request method not found.  
+HTTP request method not found.
 ### 406
-The request parameters and headers not acceptable.  
-Please change it according to documentation.  
+The request parameters and headers not acceptable.
+Please change it according to documentation.
 ### 409
-Usually happens when creating a resource that already exists.  
+Usually happens when creating a resource that already exists.
 
 # Data Structure
 
@@ -53,47 +53,80 @@ Usually happens when creating a resource that already exists.
 
 # Data Structure
 
-### Get Simple Category (object)
-+ cid: `10` (number, required) - The ID of category
-+ name: `The test` (string, required) - The name of category
+### Check Availability Employee Response (object)
++ uid: `123` (number, required) - Id of employee
++ firstName: `Rugal` (string, required)
++ lastName: `Bernstein` (string, required)
++ title: `Junior Developer` (string, optional)
++ description: `This is description` (string, optional)
++ phone: `1231231234` (string, optional)
++ avatar: `http://localhost/path` (string, optional)
 
-### Save Category Request (object)
-+ name: `Medical Treatment` (string, required) - The name of category
-+ description: `something here` (string, optional)
-+ avatar: `http://host/path` (string, optional)
-+ parentCid (number, optional) - The parent of this category. Null or blank value indicates this is a root category
+### Check Availability Response (object)
++ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
++ scid: `23` (number, required) - Id of Service Case
++ employee (Check Availability Employee Response, required) - The employee to carry on the service
 
-### Get Category Response (object)
-+ cid: `1` (number, required) - The ID of category
-+ Include (Save Category Request)
-+ children (array[Get Simple Category], fixed) - A list of sub-category under current category
+### Hold Appointment Request (object) 
++ from: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ scid: `23` (number, required) - Id of Service Case
 
-# Group Category
+### Hold Appointment Response (object)
++ aid: `23` (number, required) - Id of Appointment
++ scid: `23` (number, required) - Id of Service Case
++ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
++ status: `1` (number, required) - 0: Cancel, 1: Hold, 2:Confirm
 
-## Category CRUD [/category/{id}]
+# Group Appointment
 
-### Get category by ID [GET]
+## Query Appointment [/appointment{?serviceId,from,to,employeeId}]
+
+### Check Appointment Availability [GET]
 + Parameters
-    + id: `12` (number, required) - ID of category
+    + serviceId: `999` (number, required) - Id of service
+    + from: `1521682344` (number, required) - Search start time in `second` unit
+    + to: `1521682360` (number, required) - Search end time in `second` unit
+    + employeeId: `123` (number, optional) - Id of employee
 
 + response 200 (application/json)
-    + Attributes (Get Category Response)
+    + Attributes (array[Check Availability Response], fixed)
 
-## Root Category [/category]
-
-### Get all root category [GET]
-
-+ response 200 (application/json)
-    + Attributes (array[Get Simple Category], fixed)
-
-### Save category [POST]
+### Create and Hold Appointment [POST]
 
 + request
-    + Attributes (Save Category Request)
+    + Attributes (Hold Appointment Request)
 
 + response 201 (application/json)
-    + Attributes (Get Category Response)
+    + Attributes (Hold Appointment Response)
 
+## Appointment API [/appointment/{aid}]
+
++ Parameters
+    + aid: `999` (number, required) - Id of Appointment
+
+### Cancel Appointment [DELETE]
+Cancel Appointment only when it is confirmed.
+
++ response 204
+    + Body
+
++ response 304
+If this appointment is not in CONFIRM status.
+
+    + Body
+
+### Confirm Appointment [PUT]
+Confirm Appointment with corresponding customer information.
+
++ response 200 (application/json)
+    + Attributes (Hold Appointment Response)
+
++ response 304
+If this appointment is already in CONFIRM status.
+
+    + Body
 # Data Structure
 
 ### Get Business Response (object)
@@ -196,246 +229,46 @@ This means Aws S3 is down.
     + Body
 # Data Structure
 
-### Update Address (object)
-+ line1: `123 test rd` (string, optional)
-+ line2: `special line` (string, optional)
-+ city: `Toronto` (string, optional)
-+ province: `Ontario` (string, optional)
-+ country: `Canada` (string, optional)
-+ zip: `X0X0X0` (string, optional)
+### Get Simple Category (object)
++ cid: `10` (number, required) - The ID of category
++ name: `The test` (string, required) - The name of category
 
-### Address Response (object)
-+ aid: `23` (number, required) - The Id of address
-+ line1: `123 test rd` (string, required)
-+ line2: `special line` (string, optional)
-+ city: `Toronto` (string, required)
-+ province: `Ontario` (string, required)
-+ country: `Canada` (string, required)
-+ zip: `X0X0X0` (string, required)
-+ longitude: `12.34` (number, optional)
-+ latitude: `21.43` (number, optional)
+### Save Category Request (object)
++ name: `Medical Treatment` (string, required) - The name of category
++ description: `something here` (string, optional)
++ avatar: `http://host/path` (string, optional)
++ parentCid (number, optional) - The parent of this category. Null or blank value indicates this is a root category
 
-### Business Hour Response (object)
-+ weekDay: `3` (number, required) - The day in one week, from `1` to `7` to indicate `Monday` to `Sunday`
-+ beginAt: `915` (number, required) - The begin time of a day, from `0` to `2400` to indicate hour and minute
-+ endAt: `1730` (number, required) - The begin time of a day, from `0` to `2400` to indicate hour and minute
+### Get Category Response (object)
++ cid: `1` (number, required) - The ID of category
++ Include (Save Category Request)
++ children (array[Get Simple Category], fixed) - A list of sub-category under current category
 
-### Get Store Response (object)
-+ sid: `1` (number, required) - The Id of this Store
-+ cid: `3` (number, required) - The category Id of this store
-+ bid: `6` (number, required) - The business Id of this store
-+ timezone: `-4` (number, required)
-+ address (Address Response, required)
-+ businessHours (array[Business Hour Response], fixed) - A list of business hour of this store, order by day of week
-+ name: `Rugal Dental Clinic` (string, required)
-+ url: `rugal-test-store` (string, required)
-+ description: `This is description` (string, optional)
-+ phone: `1234567890` (string, required)
-+ email: `test@email.com` (string, required)
-+ website: `http://host.com` (string, optional)
+# Group Category
 
-### Update Store Request (object)
-+ cid: `3` (number, optional) - The category Id of this store
-+ timezone: `-1` (number, optional)
-+ address (Update Address, optional)
-+ name: `Rugal Dental Clinic` (string, optional)
-+ url: `rugal-test-shop` (string, optional) - A dash separated all lower case string, leave it null or stay it the same with previous one if you do not want to change it
-+ description: `This is description` (string, optional)
-+ phone: `1234567890` (string, optional)
-+ email: `test@email.com` (string, optional)
-+ website: `http://host.com` (string, optional)
+## Category CRUD [/category/{id}]
 
-### Update Business Hours Request (object)
-+ businessHours (array[Business Hour Response], fixed)
-
-# Group Store
-
-## Get Store Details [/store?sid={sid}&url={url}]
-
-### Get by ID [GET]
+### Get category by ID [GET]
 + Parameters
-    + sid: `1` (number, required) - ID of Store
+    + id: `12` (number, required) - ID of category
 
 + response 200 (application/json)
-    + Attributes (Get Store Response)
+    + Attributes (Get Category Response)
 
-### Get by URL [GET]
-+ Parameters
-    + url: `rugal-test-store` (string, required) - URL of Store
+## Root Category [/category]
+
+### Get all root category [GET]
 
 + response 200 (application/json)
-    + Attributes (Get Store Response)
+    + Attributes (array[Get Simple Category], fixed)
 
-## Update Store Details [/store/{sid}]
-
-### Update by ID [PUT]
-+ Parameters
-    + sid: `1` (number, required) - ID of Store
+### Save category [POST]
 
 + request
-    + Attributes (Update Store Request)
-
-+ response 200
-    + Attributes (Get Store Response)
-
-+ response 303
-This indicates the specified URL already exists, please choose another one
-    + Body
-
-+ response 400
-This indicates the specified URL is not valid, please follow the format `[a-z0-9]+(-[a-z0-9]+)*`
-    + Body
-
-
-## Store under Business [/business/{bid}/store]
-+ Parameters
-    + bid: `1` (number, required) - ID of Business
-
-### Create store under Business [POST]
-+ response 201
-    + Attributes (Create Store)
-
-## Store Business Hour CRUD [/store/{id}/business-hour]
-
-### Update Store Business Hour [POST]
-+ Parameters
-    + id: `1` (number, required) - ID of Store
-
-+ request
-    + Attributes (Update Business Hours Request)
-
-+ response 204 (application/json)
-    + Body
-
-# Data Structure
-
-### Service Base (object)
-+ price: `29.99` (number, required) - The price of this service per hour
-+ duration: `30` (number, required) - The duration of this service in minute
-+ css: `color:FFFFFF` (string, optional) - The CSS of this service
-+ status: `2` (number, optional) - The status of this service, `0 - Offline`, `1 - Readonly`, `2 - Online`
-+ description: `This is description` (string, optional)
-+ name: `This is name` (string, required)
-
-### Save Service Request (object)
-+ cid (number, required) - The category Id of this service
-+ Include (Service Base)
-
-### Update Service Request (object)
-+ cid (number, optional) - The category Id of this service
-+ price: `29.99` (number, optional) - The price of this service per hour
-+ duration: `30` (number, optional) - The duration of this service in minute
-+ css: `color:FFFFFF` (string, optional) - The CSS of this service
-+ status: `2` (number, optional) - The status of this service, `0 - Offline`, `1 - Readonly`, `2 - Online`
-+ description: `This is description` (string, optional)
-+ name: `This is name` (string, optional)
-
-### Get Service Response (object)
-+ sid: `1` (number, required) - Identifier of service
-+ name (string, required)
-+ Include (Service Base)
-+ cid (number, required) - The category Id of this service
-+ storeId (number, required) - The store Id of this service
-
-### Get Service Response With Employee (object)
-+ Include (Get Service Response)
-+ employees (array[Check Availability Employee Response], optional) - Employees that provide this service
-
-# Group Service
-
-## Service for Store [/store/{sid}/service{?withEmployee,permission}]
-
-+ Parameters
-    + sid: `1` (number, required) - Id of store
-
-### Create Service for Store [POST]
-
-+ request
-    + Attributes (Save Service Request)
+    + Attributes (Save Category Request)
 
 + response 201 (application/json)
-    + Attributes (Get Service Response)
-
-### Get services under Store [GET]
-+ Parameters
-    + withEmployee: `false` (boolean, optional) - Whether to include employees basic information
-        + Default: `false`
-    + permission: `2` (number, optional) - The permission to search with
-        + Default: `2`
-
-+ response 200 (application/json)
-    + Attributes (array[Get Service Response With Employee], fixed)
-
-## Service Operation [/service/{sid}]
-
-+ Parameters
-    + sid: `1` (number, required) - Id of service
-
-### Get Service [GET]
-
-+ response 200 (application/json)
-    + Attributes (Get Service Response)
-
-### Update Service [PUT]
-+ request
-    + Attributes (Update Service Request)
-
-+ response 200 (application/json)
-    + Attributes (Get Service Response)
-
-### Delete Service [DELETE]
-This operation will only soft delete the service.
-
-+ response 204
-    + Body
-
-# Data Structure
-
-### Save Service Case Request (object)
-+ uid: `1` (number, required) - Identifier of user
-+ sid: `1` (number, required) - Identifier of service
-
-### Get Service Case Response (object)
-+ scid: `1` (number, required) - Identifier of service case
-+ uid: `1` (number, required) - Identifier of user
-+ serviceId: `1` (number, required) - Identifier of service
-
-# Group Service Case
-
-## Employee under Service [/service/{sid}/employee]
-+ Parameters
-    + sid: `1` (number, required) - Id of service
-
-### Get Employee under Service [GET]
-
-+ response 200 (application/json)
-    + Attributes (array[Get Service Case Response], fixed)
-
-## Service Case CRUD [/service-case/{scid}]
-
-### Save Service Case for Employee [POST]
-
-+ request (application/json)
-    + Attributes (Save Service Case Request)
-
-+ response 201 (application/json)
-    + Attributes (Get Service Case Response)
-
-### Delete Service Case [DELETE]
-
-+ Parameters
-    + scid: `1` (number, required) - Id of service case
-
-+ response 204
-    + Body
-
-### Get Service Case [GET]
-
-+ Parameters
-    + scid: `1` (number, required) - Id of service case
-
-+ response 200 (application/json)
-    + Attributes (Get Service Case Response)
+    + Attributes (Get Category Response)
 
 # Data Structure
 
@@ -590,77 +423,335 @@ No employee is found or the given store does not exist
 
 # Data Structure
 
-### Check Availability Employee Response (object)
-+ uid: `123` (number, required) - Id of employee
-+ firstName: `Rugal` (string, required)
-+ lastName: `Bernstein` (string, required)
-+ title: `Junior Developer` (string, optional)
-+ description: `This is description` (string, optional)
-+ phone: `1231231234` (string, optional)
-+ avatar: `http://localhost/path` (string, optional)
+### Update Review Request(object)
++ rid: 1 (number, required) - The id of an existing review
++ rating: 5 (number, optional) - The new rating for the existing review
++ comment: `This store has fantastic customer service.` (string, optional) - The new comment for the existing review
++ like: 5 (number, optional) - The new number of the likes for the existing review
++ unlike: 1 (number, optional) - The new number of the unlikes for the existing review
 
-### Check Availability Response (object)
-+ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
-+ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
-+ scid: `23` (number, required) - Id of Service Case
-+ employee (Check Availability Employee Response, required) - The employee to carry on the service
+### Create Review Request(object)
++ rating: 1 (number, required) - The rating a customer puts for a new review
++ comment: `This store has fantastic customer service.` (string, required) - The comment a customer puts for a new review
 
-### Hold Appointment Request (object) 
-+ from: `1521682344` (number, required) - Unix timestamp of appointment begin time
-+ scid: `23` (number, required) - Id of Service Case
+### Output Review Response(object)
++ rid: 1 (number, required) - The id of an existing review
++ uid: 1 (number, required) - The id of the reviewer
++ firstName: `Jasper` (string, required) - The first name of the reviewer
++ lastName: `Zhao` (string, required) - The last name of the reviewer
++ email: `test@apointer.ca` (string, required) - The email of the reviewer
++ avatar: `https://s3.amazonaws.com/bucket/path/avatar.png` (string, optional) - The public Amazon S3 url to the avatar of the reviewer
++ rating: 5 (number, required) - The rating given by the reviewer
++ comment: `This store has fantastic customer service.` (string, required) - The comment given by the reviewer
++ like: 5 (number, optional) - The number of likes on this review
++ unlike: 1 (number, optional) - The number of unlikes on this review
++ lastUpdated: 1527358914 (number, required) - The last update timestamp in seconds of this review
 
-### Hold Appointment Response (object)
-+ aid: `23` (number, required) - Id of Appointment
-+ scid: `23` (number, required) - Id of Service Case
-+ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
-+ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
-+ status: `1` (number, required) - 0: Cancel, 1: Hold, 2:Confirm
+# Group Review
 
-# Group Appointment
-
-## Query Appointment [/appointment{?serviceId,from,to,employeeId}]
-
-### Check Appointment Availability [GET]
+## Store Reviews [/stores/{sid}/review]
 + Parameters
-    + serviceId: `999` (number, required) - Id of service
-    + from: `1521682344` (number, required) - Search start time in `second` unit
-    + to: `1521682360` (number, required) - Search end time in `second` unit
-    + employeeId: `123` (number, optional) - Id of employee
 
-+ response 200 (application/json)
-    + Attributes (array[Check Availability Response], fixed)
+    + sid: 1 (number, required) - The id of a store
 
-### Create and Hold Appointment [POST]
+### Post A Review [POST]
++ request (application/json)
 
-+ request
-    + Attributes (Hold Appointment Request)
+    + Attributes (Create Review Request)
+
+    + Headers
+
+            Authorization: Authorization-token
 
 + response 201 (application/json)
-    + Attributes (Hold Appointment Response)
+The review is successfully created and its information is returned
 
-## Appointment API [/appointment/{aid}]
+    + Attributes (Output Review Response)
+
++ response 401
+The customer tries to post this review is not an authorized customer
+
+    + Body
+
++ response 404
+The particular store does not exist
+
+    + Body
+
+### Get All Reviews [GET]
++ response 200 (application/json)
+All the reviews under the requested store are found and they are returned
+
+    + Attributes (array[Output Review Response])
+
++ response 404
+The requested store does not exist
+
+    + Body
+
+### Update A Review [PUT]
++ request (application/json)
+
+    + Attributes (Update Review Request)
+
++ response 201 (application/json)
+
+    + Attributes (Output Review Response)
+
++ response 401
+The customer tries to update this existing review is not an authorized customer
+
+    + Body
+
++ response 403
+The authorized customer tries to update someone else's review
+
+    + Body
+
++ response 404
+The requested store/the existing review cannot be found
+
+    + Body
+
+# Data Structure
+
+### Service Base (object)
++ price: `29.99` (number, required) - The price of this service per hour
++ duration: `30` (number, required) - The duration of this service in minute
++ css: `color:FFFFFF` (string, optional) - The CSS of this service
++ status: `2` (number, optional) - The status of this service, `0 - Offline`, `1 - Readonly`, `2 - Online`
++ description: `This is description` (string, optional)
++ name: `This is name` (string, required)
+
+### Save Service Request (object)
++ cid (number, required) - The category Id of this service
++ Include (Service Base)
+
+### Update Service Request (object)
++ cid (number, optional) - The category Id of this service
++ price: `29.99` (number, optional) - The price of this service per hour
++ duration: `30` (number, optional) - The duration of this service in minute
++ css: `color:FFFFFF` (string, optional) - The CSS of this service
++ status: `2` (number, optional) - The status of this service, `0 - Offline`, `1 - Readonly`, `2 - Online`
++ description: `This is description` (string, optional)
++ name: `This is name` (string, optional)
+
+### Get Service Response (object)
++ sid: `1` (number, required) - Identifier of service
++ name (string, required)
++ Include (Service Base)
++ cid (number, required) - The category Id of this service
++ storeId (number, required) - The store Id of this service
+
+### Get Service Response With Employee (object)
++ Include (Get Service Response)
++ employees (array[Check Availability Employee Response], optional) - Employees that provide this service
+
+# Group Service
+
+## Service for Store [/store/{sid}/service{?withEmployee,permission}]
 
 + Parameters
-    + aid: `999` (number, required) - Id of Appointment
+    + sid: `1` (number, required) - Id of store
 
-### Cancel Appointment [DELETE]
-Cancel Appointment only when it is confirmed.
+### Create Service for Store [POST]
+
++ request
+    + Attributes (Save Service Request)
+
++ response 201 (application/json)
+    + Attributes (Get Service Response)
+
+### Get services under Store [GET]
++ Parameters
+    + withEmployee: `false` (boolean, optional) - Whether to include employees basic information
+        + Default: `false`
+    + permission: `2` (number, optional) - The permission to search with
+        + Default: `2`
+
++ response 200 (application/json)
+    + Attributes (array[Get Service Response With Employee], fixed)
+
+## Service Operation [/service/{sid}]
+
++ Parameters
+    + sid: `1` (number, required) - Id of service
+
+### Get Service [GET]
+
++ response 200 (application/json)
+    + Attributes (Get Service Response)
+
+### Update Service [PUT]
++ request
+    + Attributes (Update Service Request)
+
++ response 200 (application/json)
+    + Attributes (Get Service Response)
+
+### Delete Service [DELETE]
+This operation will only soft delete the service.
 
 + response 204
     + Body
 
-+ response 304
-If this appointment is not in CONFIRM status.
+# Data Structure
 
-    + Body
+### Save Service Case Request (object)
++ uid: `1` (number, required) - Identifier of user
++ sid: `1` (number, required) - Identifier of service
 
-### Confirm Appointment [PUT]
-Confirm Appointment with corresponding customer information.
+### Get Service Case Response (object)
++ scid: `1` (number, required) - Identifier of service case
++ uid: `1` (number, required) - Identifier of user
++ serviceId: `1` (number, required) - Identifier of service
+
+# Group Service Case
+
+## Employee under Service [/service/{sid}/employee]
++ Parameters
+    + sid: `1` (number, required) - Id of service
+
+### Get Employee under Service [GET]
 
 + response 200 (application/json)
-    + Attributes (Hold Appointment Response)
+    + Attributes (array[Get Service Case Response], fixed)
 
-+ response 304
-If this appointment is already in CONFIRM status.
+## Service Case CRUD [/service-case/{scid}]
 
+### Save Service Case for Employee [POST]
+
++ request (application/json)
+    + Attributes (Save Service Case Request)
+
++ response 201 (application/json)
+    + Attributes (Get Service Case Response)
+
+### Delete Service Case [DELETE]
+
++ Parameters
+    + scid: `1` (number, required) - Id of service case
+
++ response 204
+    + Body
+
+### Get Service Case [GET]
+
++ Parameters
+    + scid: `1` (number, required) - Id of service case
+
++ response 200 (application/json)
+    + Attributes (Get Service Case Response)
+
+# Data Structure
+
+### Update Address (object)
++ line1: `123 test rd` (string, optional)
++ line2: `special line` (string, optional)
++ city: `Toronto` (string, optional)
++ province: `Ontario` (string, optional)
++ country: `Canada` (string, optional)
++ zip: `X0X0X0` (string, optional)
+
+### Address Response (object)
++ aid: `23` (number, required) - The Id of address
++ line1: `123 test rd` (string, required)
++ line2: `special line` (string, optional)
++ city: `Toronto` (string, required)
++ province: `Ontario` (string, required)
++ country: `Canada` (string, required)
++ zip: `X0X0X0` (string, required)
++ longitude: `12.34` (number, optional)
++ latitude: `21.43` (number, optional)
+
+### Business Hour Response (object)
++ weekDay: `3` (number, required) - The day in one week, from `1` to `7` to indicate `Monday` to `Sunday`
++ beginAt: `915` (number, required) - The begin time of a day, from `0` to `2400` to indicate hour and minute
++ endAt: `1730` (number, required) - The begin time of a day, from `0` to `2400` to indicate hour and minute
+
+### Get Store Response (object)
++ sid: `1` (number, required) - The Id of this Store
++ cid: `3` (number, required) - The category Id of this store
++ bid: `6` (number, required) - The business Id of this store
++ timezone: `-4` (number, required)
++ address (Address Response, required)
++ businessHours (array[Business Hour Response], fixed) - A list of business hour of this store, order by day of week
++ name: `Rugal Dental Clinic` (string, required)
++ url: `rugal-test-store` (string, required)
++ description: `This is description` (string, optional)
++ phone: `1234567890` (string, required)
++ email: `test@email.com` (string, required)
++ website: `http://host.com` (string, optional)
+
+### Update Store Request (object)
++ cid: `3` (number, optional) - The category Id of this store
++ timezone: `-1` (number, optional)
++ address (Update Address, optional)
++ name: `Rugal Dental Clinic` (string, optional)
++ url: `rugal-test-shop` (string, optional) - A dash separated all lower case string, leave it null or stay it the same with previous one if you do not want to change it
++ description: `This is description` (string, optional)
++ phone: `1234567890` (string, optional)
++ email: `test@email.com` (string, optional)
++ website: `http://host.com` (string, optional)
+
+### Update Business Hours Request (object)
++ businessHours (array[Business Hour Response], fixed)
+
+# Group Store
+
+## Get Store Details [/store?sid={sid}&url={url}]
+
+### Get by ID [GET]
++ Parameters
+    + sid: `1` (number, required) - ID of Store
+
++ response 200 (application/json)
+    + Attributes (Get Store Response)
+
+### Get by URL [GET]
++ Parameters
+    + url: `rugal-test-store` (string, required) - URL of Store
+
++ response 200 (application/json)
+    + Attributes (Get Store Response)
+
+## Update Store Details [/store/{sid}]
+
+### Update by ID [PUT]
++ Parameters
+    + sid: `1` (number, required) - ID of Store
+
++ request
+    + Attributes (Update Store Request)
+
++ response 200
+    + Attributes (Get Store Response)
+
++ response 303
+This indicates the specified URL already exists, please choose another one
+    + Body
+
++ response 400
+This indicates the specified URL is not valid, please follow the format `[a-z0-9]+(-[a-z0-9]+)*`
+    + Body
+
+
+## Store under Business [/business/{bid}/store]
++ Parameters
+    + bid: `1` (number, required) - ID of Business
+
+### Create store under Business [POST]
++ response 201
+    + Attributes (Create Store)
+
+## Store Business Hour CRUD [/store/{id}/business-hour]
+
+### Update Store Business Hour [POST]
++ Parameters
+    + id: `1` (number, required) - ID of Store
+
++ request
+    + Attributes (Update Business Hours Request)
+
++ response 204 (application/json)
     + Body
