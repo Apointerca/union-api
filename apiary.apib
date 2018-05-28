@@ -278,6 +278,9 @@ This means Aws S3 is down.
 + name: `Rugal Dental` (string, required) - The name of this store
 + permission: 1, 1, 2, 0, 1 (array[number], required) - The permission set of the employee in this store, index from 0 to 4 indicates `BUSINESS_INFO(0)`, `CALENDAR(1)`, `SERVICE(2)`, `CUSTOMER(3)`, `EMPLOYEE(4)` respectively. With `0` in the array means `No Permission`, `1` represents `Read-Only` and `2` is `Read-Write` permission.
 
+### Upload Avatar Response (object)
++ avatar: `http://amazon.s3.com/avatar.img` (string, required) - The public Amazon S3 url to access an avatar
+
 ### Output Employee Response (object)
 + uid: 1 (number, required) - Id of an existing employee
 
@@ -418,6 +421,122 @@ The given employee is deleted from the particular store and his/her old details 
 
 + response 404
 No employee is found or the given store does not exist
+
+    + Body
+
+## Upload an Avatar for an Employee of a Store [/{uid}/store/{sid}/avatar]
++ Parameters
+
+    + uid: 1 (number, required) - The id of an employee
+    + sid: 1 (number, required) - The id of a store
+
+### Upload Avatar [POST]
+Please use `name=file` and set the `filename` as the original file name.  
+Do not forget to set the `Content-Type`.
+
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="file"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ response 201 (application/json)
+The avatar is successfully uploaded to Amazon S3
+
+    + Attributes (Upload Avatar Response)
+
++ response 404
+No employee is found or the given store does not exist
+
+    + Body
+
++ response 503
+The Amazon S3 is not working
+
+    + Body
+
+# Data Structure
+
+### Output Image Response
++ gid: 1 (number, required) - The id of a gallery image
++ sid: 1 (number, required) - The id of a store
++ imageUrl: `https://s3.amazonaws.com/bucket/path/avatar.png` (string, required) - The public Amazon S3 url to access an image
+
+# Group Gallery
+
+## Store Gallery Add And Get [/stores/{sid}/gallery]
++ Parameters
+
+    + sid: 1 (number, required) - The id of a store
+
+### Upload An Image [POST]
+Please use `name=file` and set the `filename` as the original file name.  
+Do not forget to set the `Content-Type`. 
+
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="file"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
++ Response 201 (application/json)
+The image is successfully uploaded
+
+    + Attributes (Output Image Response)
+
++ Response 404
+The requested store does not exist
+
+    + Attributes (Output Image Response)
+
++ Response 503
+The Amazon S3 is not working
+
+    + Body
+
+### Get All Images [GET]
+Get all images of a particular store to be displayed in its gallery.
+
++ response 200 (application/json)
+
+    + Attributes (array[Output Image Response])
+
++ response 404
+The requested store does not exist
+
+    + Body
+
+## Store Gallery Delete [/stores/{sid}/gallery/{gid}]
++ Parameters
+
+    + sid: 1 (number, required) - The id of a store
+    + gid: 1 (number, required) - The id of a gallery image
+
+### Delete an Image [DELETE]
+
++ response 200 (application/json)
+The requested image is successfully deleted from this store
+
+    + Attributes (Output Image Response)
+
++ response 404
+ The requested store/image does not exist
 
     + Body
 
@@ -755,3 +874,4 @@ This indicates the specified URL is not valid, please follow the format `[a-z0-9
 
 + response 204 (application/json)
     + Body
+
