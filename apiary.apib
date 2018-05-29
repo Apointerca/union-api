@@ -91,8 +91,8 @@ Usually happens when creating a resource that already exists.
 
 + response 200 (application/json)
     + Attributes (object)
-        + 1521682344 (array[Appointment Availability Response], fix)
-        + 1521692344 (array[Appointment Availability Response], fix)
+        + 1521682344 (array[Appointment Availability Response], fixed-type)
+        + 1521692344 (array[Appointment Availability Response], fixed-type)
 
 ### Create and Hold Appointment [POST]
 
@@ -339,7 +339,7 @@ This means Aws S3 is down.
 
     + Attributes (array[Get Service Case Response], fixed)
 
-## Employees of Store [/employee/store/{sid}]
+## Employees of Store [/stores/{sid}/employees]
 + Parameters
 
     + sid: 1 (number, required) - Id of a store
@@ -356,17 +356,16 @@ No employees are found at this store or the requested store does not exist
 
     + Body
 
-## An Employee of Store [/employee]
+## New Employee of Store [/stores/{sid}/employee]
++ Parameters
+
+    + sid: 1 (number, required) - Id of a store
 
 ### Create a New Employee at a Store [POST]
 
 + request (application/json)
 
     + Attributes (Create Employee Request)
-
-    + Headers
-
-            sid: 1 (number, required) - Id of a store
 
 + response 201 (application/json)
 Successfully created a new employee at the particular store and his/her information details are returned
@@ -388,15 +387,17 @@ The new employee failed to be created at Dundas. Therefore, Union also failed to
 
     + Body
 
-### Update an Existing Employee at a Store [PUT]
+## Update and Delete Employee of Store [/stores/{sid}/employees/{uid}]
++ Parameters
+
+    + sid: 1 (number, required) - The id of a store
+    + uid: 1 (number, required) - The id of an employee
+
+### Update an Employee at a Store [PUT]
 
 + request (application/json)
 
     + Attributes (Update Employee Request)
-
-    + Headers
-
-            sid: 1 (number, required) - Id of a store
 
 + response 201 (application/json)
 The information of the existing employee is updated and his/her new details are returned
@@ -408,13 +409,7 @@ No employee is found or the requested store does not exist
 
     + Body
 
-## Delete an Employee from a Store [/employee/{uid}/store/{sid}]
-+ parameters
-
-    + uid: 1 (number, required) - Id of an existing employee
-    + sid: 1 (number, required) - Id of an existing store
-
-### Delete Employee [DELETE]
+### Delete an Employee at a Store [DELETE]
 
 + response 200 (application/json)
 The given employee is deleted from the particular store and his/her old details are returned
@@ -426,7 +421,7 @@ No employee is found or the given store does not exist
 
     + Body
 
-## Upload an Avatar for an Employee of a Store [/{uid}/store/{sid}/avatar]
+## Upload an Avatar for an Employee at a Store [/stores/{sid}/employees/{uid}/avatar]
 + Parameters
 
     + uid: 1 (number, required) - The id of an employee
@@ -517,7 +512,7 @@ Get all images of a particular store to be displayed in its gallery.
 
 + response 200 (application/json)
 
-    + Attributes (array[Output Image Response])
+    + Attributes (array[Output Image Response], fixed-type)
 
 + response 404
 The requested store does not exist
@@ -602,7 +597,7 @@ The particular store does not exist
 + response 200 (application/json)
 All the reviews under the requested store are found and they are returned
 
-    + Attributes (array[Output Review Response])
+    + Attributes (array[Output Review Response], fixed-type)
 
 + response 404
 The requested store does not exist
@@ -837,7 +832,7 @@ Get all shifts under a particular store between certain start time and end time
 + response 200 (application/json)
 All shifts under this store are found and their information is returned
 
-    + Attributes (array[Output Shift Response])
+    + Attributes (array[Output Shift Response], fixed-type)
 
 + response 403
 The end time of any shift is smaller or equal to its start time
@@ -886,6 +881,7 @@ The new shift end time is smaller/equal to the new start time
 The shift does not exist
 
     + Body
+
 # Data Structure
 
 ### Update Address (object)
