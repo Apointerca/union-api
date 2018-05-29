@@ -565,7 +565,7 @@ The requested image is successfully deleted from this store
 + like: 5 (number, optional) - The number of likes on this review
 + unlike: 1 (number, optional) - The number of unlikes on this review
 + createdAt: 1527358914 (number, optional) - The last created timestamp in seconds of this review
-+ modifiedAt: 157958321 (number, optional) - The last modified timestamp in seconds of this review
++ modifiedAt: 1527358998 (number, optional) - The last modified timestamp in seconds of this review
 
 # Group Review
 
@@ -772,6 +772,120 @@ This operation will only soft delete the service.
 + response 200 (application/json)
     + Attributes (Get Service Case Response)
 
+# Data Structure
+
+### Create Shift Request(object)
++ uid: 1 (number, required) - The id of an existing employee
++ beginAt: 1527358914 (number, required) - The start time of the new shift
++ endAt: 1527359923 (number, required) - The end time of the new shift
+
+### Update Shift Request(object)
++ beginAt: 1527358914 (number, required) - The new start time of an existing shift
++ endAt: 1527359923 (number, required) - The new end time of an existing shift
+
+### Get Employee (object)
++ uid: 1 (number, required) - The id of an existing employee
++ firstName: Jasper (string, required) - The first name of an existing employee
++ lastName: Zhao (string, required) - The last name of an existing employee
++ title: Dentist (string, required) - The title of an existing employee
+
+### Output Shift Response(object)
++ sid: 1 (number, required) - The id of an existing shift
++ beginAt: 1527358914 (number, required) - The start time of an existing shift
++ endAt: 1527359923 (number, required) - The end time of an existing shift
++ employee (Get Employee) - The information of an existing employee
+
+# Group Shift
+
+## Store Shift Create [/stores/{sid}/shift]
++ Parameters
+
+    + sid: 1 (number, required) - The id of a store
+
+### Create A Shift [POST]
+
++ request (application/json)
+
+    + Attributes (Create Shift Request)
+
++ response 201 (application/json)
+The new shift is successfully created and the information of the successfully created shift is returned
+
+    + Attributes (Output Shift Response)
+
++ response 403
+The new shift end time is smaller or equal to the start time
+
+    + Body
+
++ response 404
+The requested store or employee does not exist
+
+    + Body
+
+## Store Shift Get [/stores/{sid}/shift?beginat={beginAt}&endat={endAt}]
+Get all shifts under a particular store between certain start time and end time
+
++ Parameters
+
+    + sid: 1 (number, required) - The id of a store
+    + beginAt: 1527358914 (number, required) - The start time of any shift
+    + endAt: 1527359923 (number, required) - The end time of any shift
+
+### Get Store All Shifts [GET]
+
++ response 200 (application/json)
+All shifts under this store are found and their information is returned
+
+    + Attributes (array[Output Shift Response])
+
++ response 403
+The end time of any shift is smaller or equal to its start time
+
+    + Body
+
++ response 404
+The store does not exist or no employee is under this store
+
+    + Body
+
+## Store Shift Delete And Update [/shift/{sid}]
++ Parameters
+
+    + sid: 1 (number, required) - The id of a shift
+
+### Delete A Shift [DELETE]
+
++ response 200 (application/json)
+The existing shift is successfully deleted and its information is returned
+
+    + Attributes (Output Shift Response)
+
++ response 404
+The shift does not exist
+
+    + Body
+
+### Update A Shift [PUT]
+
++ request (application/json)
+
+    + Attributes (Update Shift Request)
+
++ response 201 (application/json)
+The requested shift is successfully updated and its updated information is returned
+
+    + Attributes (Output Shift Response)
+
++ response 403
+The new shift end time is smaller/equal to the new start time
+
+    + Body
+
++ response 404
+The shift does not exist
+
+    + Body
 # Data Structure
 
 ### Update Address (object)
