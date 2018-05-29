@@ -470,7 +470,7 @@ The Amazon S3 is not working
 ### Output Image Response
 + gid: 1 (number, required) - The id of a gallery image
 + sid: 1 (number, required) - The id of a store
-+ imageUrl: `https://s3.amazonaws.com/bucket/path/avatar.png` (string, required) - The public Amazon S3 url to access an image
++ image: `https://s3.amazonaws.com/bucket/path/avatar.png` (string, required) - The public Amazon S3 url to access an image
 
 # Group Gallery
 
@@ -524,10 +524,9 @@ The requested store does not exist
 
     + Body
 
-## Store Gallery Delete [/stores/{sid}/gallery/{gid}]
+## Store Gallery Delete [/gallery/{gid}]
 + Parameters
 
-    + sid: 1 (number, required) - The id of a store
     + gid: 1 (number, required) - The id of a gallery image
 
 ### Delete an Image [DELETE]
@@ -538,14 +537,13 @@ The requested image is successfully deleted from this store
     + Attributes (Output Image Response)
 
 + response 404
- The requested store/image does not exist
+ The requested image does not exist
 
     + Body
 
 # Data Structure
 
 ### Update Review Request(object)
-+ rid: 1 (number, required) - The id of an existing review
 + rating: 5 (number, optional) - The new rating for the existing review
 + comment: `This store has fantastic customer service.` (string, optional) - The new comment for the existing review
 + like: 5 (number, optional) - The new number of the likes for the existing review
@@ -566,11 +564,12 @@ The requested image is successfully deleted from this store
 + comment: `This store has fantastic customer service.` (string, required) - The comment given by the reviewer
 + like: 5 (number, optional) - The number of likes on this review
 + unlike: 1 (number, optional) - The number of unlikes on this review
-+ lastUpdated: 1527358914 (number, required) - The last update timestamp in seconds of this review
++ createdAt: 1527358914 (number, optional) - The last created timestamp in seconds of this review
++ modifiedAt: 157958321 (number, optional) - The last modified timestamp in seconds of this review
 
 # Group Review
 
-## Store Reviews [/stores/{sid}/review]
+## Store Reviews Create And Get [/stores/{sid}/review]
 + Parameters
 
     + sid: 1 (number, required) - The id of a store
@@ -610,10 +609,19 @@ The requested store does not exist
 
     + Body
 
+## Store Reviews Update [/review/{rid}]
++ Parameters
+
+    + rid: 1 (number, required) - The id of a review
+
 ### Update A Review [PUT]
 + request (application/json)
 
     + Attributes (Update Review Request)
+
+    + Headers
+
+            Authorization: Authorization-token
 
 + response 201 (application/json)
 
@@ -630,7 +638,7 @@ The authorized customer tries to update someone else's review
     + Body
 
 + response 404
-The requested store/the existing review cannot be found
+The given review cannot be found
 
     + Body
 
