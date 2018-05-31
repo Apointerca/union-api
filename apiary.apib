@@ -79,6 +79,26 @@ Usually happens when creating a resource that already exists.
 + endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
 + status: `1` (number, required) - 0: Cancel, 1: Hold, 2:Confirm
 
+### Confirm Appointment Request (object)
++ firstName: `Rugal` (string, required)
++ lastName: `Bernstein` (string, required)
++ email: `customer@email.com` (string, required)
++ phone: `1231231234` (string, optional)
+
+### Get Employee Response (object)
++ firstName: `Jasper` (string, required) - The first name of the existing employee to be displayed at Summerhill
++ lastName: `Zhao` (string, required) - The last name of the existing employee to be displayed at Summerhill
++ email: `employee@apointer.ca` (string, required) - The work email of the existing employee to be displayed at Summerhill
++ phone: `4167895678` (string, optional) - The work phone number of the existing employee to be displayed at Summerhill
+
+### Get Appointment Response (object)
++ aid: `23` (number, required) - Id of Appointment
++ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
++ service (Get Service Response, required) - The service for this appointment
++ employee (Get Employee Response, required) - The employee for this appointment
++ customer (Get Employee Response, required) - The customer for this appointment
+
 # Group Appointment
 
 ## Query Appointment [/appointment{?serviceId,time,employeeId}]
@@ -108,26 +128,39 @@ Usually happens when creating a resource that already exists.
     + aid: `999` (number, required) - Id of Appointment
 
 ### Cancel Appointment [DELETE]
-Cancel Appointment only when it is confirmed.
+Cancel a confirmed Appointment.
 
 + response 204
     + Body
 
 + response 304
-If this appointment is not in CONFIRM status.
+If this appointment is not in `CONFIRM` status.
 
     + Body
 
 ### Confirm Appointment [PUT]
 Confirm Appointment with corresponding customer information.
 
++ Request
+    + Attributes (Confirm Appointment Request)
+    + Headers 
+
+            Anonymous: true
+
 + response 200 (application/json)
-    + Attributes (Hold Appointment Response)
+    + Attributes (Get Appointment Response)
 
 + response 304
-If this appointment is already in CONFIRM status.
+If this appointment is already in `CONFIRM` status.
 
     + Body
+
+### Get Appointment [GET]
+Get Appointment with corresponding customer, employee and service information.
+
+
++ response 200 (application/json)
+    + Attributes (Get Appointment Response)
 
 # Data Structure
 
