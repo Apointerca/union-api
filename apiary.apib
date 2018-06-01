@@ -91,7 +91,6 @@ Usually happens when creating a resource that already exists.
 + lastName: `Zhao` (string, required)
 + email: `employee@apointer.ca` (string, required)
 + phone: `4167895678` (string, optional)
-+ phone: `4167895678` (string, optional)
 + avatar: `http://localhost/path` (string, optional)
 
 ### Get Customer Response (Get User Response)
@@ -146,13 +145,30 @@ If this appointment is not in `CONFIRM` status.
     + Body
 
 ### Confirm Appointment [PUT]
-Confirm Appointment with corresponding customer information.
+Confirm Appointment with corresponding customer information.  
+In order for `Bloor` to deal with customer information, a header `Anonymous: true` is required.  
+
+Since header information is only for customer creation, the request body is the actual information that we want to book appointment for.  
+Hence always take care of request body.  
+
+
+The order of deciding order is like this:  
+
+1. If header includes `Authorization` token, Bloor will ignore others and only copy `uid` as `cid`
+2. If no `Authorization` token, then `email` header is `required` to determine customer identity
+    1. If customer exists, Bloor will pick up the existing customer `uid` as `cid`. In this case other headers will be ignored
+    2. Otherwise, `firstName` and `lastName` are required so Bloor will create new `unregistered` customer and set `uid` as `cid`
 
 + Request
     + Attributes (Confirm Appointment Request)
     + Headers 
 
             Anonymous: true
+            Authorization: Bearer ${jwt}
+            email: ${email}
+            firstName: ${firstName}
+            lastName: ${lastName}
+            phone: ${phone}
 
 + response 200 (application/json)
     + Attributes (Get Appointment Response)
