@@ -105,9 +105,19 @@ Usually happens when creating a resource that already exists.
 + employee (Get User Response, required) - The employee for this appointment
 + customer (Get Customer Response, required) - The customer for this appointment
 
+### Get Simple Appointment Response (object)
++ aid: `23` (number, required) - Id of Appointment
++ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
++ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
++ uid: `11` (number, required) - Id of customer
++ status: `2` (number, required) - Appointment status, 0-CANCEL, 1-HOLD, 2-CONFIRM
++ price: `150.5` (number, required)
++ Include (Confirm Appointment Request)
++ note: `This is note` (string, optional)
+
 # Group Appointment
 
-## Query Appointment [/appointment{?serviceId,beginAt,employeeId}]
+## Check Appointment [/appointment{?serviceId,beginAt,employeeId}]
 
 ### Check Available Time [GET]
 + Parameters
@@ -184,6 +194,17 @@ Get Appointment with corresponding customer, employee and service information.
 + response 200 (application/json)
     + Attributes (Get Appointment Response)
 
+## Find Appointment under Store [/store/{sid}/appointment{?beginAt,endAt}]
+
+### Find Appointment [GET]
+
++ Parameters
+    + sid: `999` (number, required) - Id of store
+    + beginAt: `1521682344` (number, required) - Target time in `second` unit
+    + endAt: `1521793344` (number, required) - Target time in `second` unit
+
++ response 200 (application/json)
+    + Attributes (array[Get Simple Appointment Response], fixed)
 # Data Structure
 
 ### Get Business Response (object)
