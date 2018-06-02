@@ -105,15 +105,37 @@ Usually happens when creating a resource that already exists.
 + employee (Get User Response, required) - The employee for this appointment
 + customer (Get Customer Response, required) - The customer for this appointment
 
-### Get Simple Appointment Response (object)
+### Get Full Appointment Service (object)
++ sid: `11` (number, required) - Id of service
++ name: `Special Service` (string, required)
++ price: `11.5` (number, required)
++ duration: `60` (number, required) - Service duration in minute unit
+
+### Get Full Appointment Customer (object)
++ uid: `21` (number, required) - Id of employee
++ firstName: `Rugal` (string, required)
++ lastName: `Bernstein` (string, required)
++ email: `customer@mail.com` (string, required)
+
+### Get Full Appointment Employee (object)
++ wid: `11` (number, required) - Id of workspace
++ uid: `21` (number, required) - Id of employee
++ name: `Special Service` (string, required)
++ price: `11.5` (number, required)
++ firstName: `Rugal` (string, required)
++ lastName: `Bernstein` (string, required)
++ title: `Senior dental` (string, required)
++ description: `This is description` (string, optional)
+
+### Get Full Appointment Response (object)
 + aid: `23` (number, required) - Id of Appointment
 + beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
 + endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
-+ uid: `11` (number, required) - Id of customer
 + status: `2` (number, required) - Appointment status, 0-CANCEL, 1-HOLD, 2-CONFIRM
-+ price: `150.5` (number, required)
-+ Include (Confirm Appointment Request)
 + note: `This is note` (string, optional)
++ service (Get Full Appointment Service, required)
++ employee (Get Full Appointment Employee, required)
++ customer (Get Full Appointment Customer, required)
 
 # Group Appointment
 
@@ -192,7 +214,7 @@ If this appointment is already in `CONFIRM` status.
 Get Appointment with corresponding customer, employee and service information.
 
 + response 200 (application/json)
-    + Attributes (Get Appointment Response)
+    + Attributes (Get Full Appointment Response)
 
 ## Find Appointment under Store [/store/{sid}/appointment{?beginAt,endAt}]
 
@@ -204,7 +226,7 @@ Get Appointment with corresponding customer, employee and service information.
     + endAt: `1521793344` (number, required) - Target time in `second` unit
 
 + response 200 (application/json)
-    + Attributes (array[Get Simple Appointment Response], fixed)
+    + Attributes (array[Get Full Appointment Response], fixed)
 # Data Structure
 
 ### Get Business Response (object)
