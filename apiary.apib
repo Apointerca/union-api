@@ -216,12 +216,37 @@ Get Appointment with corresponding customer, employee and service information.
 + response 200 (application/json)
     + Attributes (Get Full Appointment Response)
 
-## Find Appointment under Store [/store/{sid}/appointment{?beginAt,endAt}]
+## Find Appointment of Store [/store/{sid}/appointment{?beginAt,endAt}]
 
 ### Find Appointment [GET]
 
 + Parameters
-    + sid: `999` (number, required) - Id of store
+    + sid: `45` (number, required) - Id of store
+    + beginAt: `1521682344` (number, required) - Target time in `second` unit
+    + endAt: `1521793344` (number, required) - Target time in `second` unit
+
++ response 200 (application/json)
+    + Attributes (array[Get Full Appointment Response], fixed)
+
+## Find Appointment of Customer [/customer/{uid}/appointment{?beginAt,endAt}]
+
+### Find Appointment [GET]
+
++ Parameters
+    + uid: `213` (number, required) - Id of customer
+    + beginAt: `1521682344` (number, required) - Target time in `second` unit
+    + endAt: `1521793344` (number, required) - Target time in `second` unit
+
++ response 200 (application/json)
+    + Attributes (array[Get Full Appointment Response], fixed)
+
+## Find Appointment of Store Customer [/store/{sid}/customer/{uid}/appointment{?beginAt,endAt}]
+
+### Find Appointment [GET]
+
++ Parameters
+    + sid: `321` (number, required) - Id of store
+    + uid: `444` (number, required) - Id of customer
     + beginAt: `1521682344` (number, required) - Target time in `second` unit
     + endAt: `1521793344` (number, required) - Target time in `second` unit
 
