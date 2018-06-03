@@ -158,18 +158,16 @@ If this appointment is not in `CONFIRM` status.
     + Body
 
 ### Confirm Appointment [PUT]
-Confirm Appointment with corresponding customer information.  
+Confirm Appointment with corresponding customer information.
 
-This request consists of two phase, customer check and appointment confirmation.  
+This request consists of two phase, customer check and appointment confirmation.
 1. customer check: `Bloor` will use request header to check and create customer if necessary, and fill `cid` in request header
 2. appointment confirmation: `Union` will use `cid` from request header and the object from request body to confirm an appointment
 
-In request body, the `email` is the service booker, and the `uid` is the service receiver.  
+In request body, the `email` is the service booker.
 
 #### Customer Check
-In order for `Bloor` to create an unregistered customer, a header `Anonymous: true` is required.  
-Without this header, `Bloor` will not check customer at all, thus `cid` will not exist.    
-Whenever user confirms an appointment without login, frontend needs to send this header.  
+Frontend needs to send this header
 ```
 Anonymous: true
 email: ${email}
@@ -177,19 +175,22 @@ firstName: ${firstName}
 lastName: ${lastName}
 ```
 
-Bloor will check the existence of customer.
-1. If exist, set `cid` as `uid` of the customer
-2. Otherwise, create an unregistered customer and set `cid` as `uid`
+When `Bloor` sees the `Anonymous: true` header, it will talk to `Dundas` using the `email`, `firstName` and `lastName` that were set in the header to get the corresponding `uid`.\
+\
+Then, it will set that `uid` as `cid` to pass down the chain.
+\
+\
+`Dundas` will perform the following things when it receives the request from `Bloor`:
+1. If the `email` exists under a registered/unregistered customer, it will return the `uid` of that customer
+2. If the `email` exists under an employee, it will return the `uid` of that employee
+3. If the `email` does not exists, it will create a new unregistered customer account under the `email`, `firstName` and `lastName`.\
+   Then, it returns the `uid` of that newly created account.
 
 #### Appointment Confirmation
-Since header information is only for customer creation, the request body is the actual information that we want to book appointment for.  
-Hence always take care of request body.  
-Since after `Bloor` the customer of service receiver must exist.  
+Since this action can potentionally support anonymous access, we therefore must only treat `cid` as the only ID of an user.
+All other fields in the request body will just be filled inside appointment.
 
-1. If we have `cid`, which means this is an anonymous user, confirm appointment with `cid`
-2. Otherwise, it must be an login user, hence, confirm appointment with `uid`
-
-All other fields in request body will just be filled in appointment.  
+> **If ever needs to talk to `Dundas` to get user basic information, remember to call getUsers API in the UserController of `Dundas` as the `cid` could be the `uid` of an existing employee.**
 
 + Request
     + Attributes (Confirm Appointment Request)
@@ -244,6 +245,7 @@ Get Appointment with corresponding customer, employee and service information.
 
 + response 200 (application/json)
     + Attributes (array[Get Full Appointment Response], fixed)
+
 # Data Structure
 
 ### Get Business Response (object)
