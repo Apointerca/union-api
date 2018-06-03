@@ -85,26 +85,6 @@ Usually happens when creating a resource that already exists.
 + email: `customer@email.com` (string, required)
 + phone: `1231231234` (string, optional)
 
-### Get User Response (object)
-+ uid: `23` (number, required) - Id of User
-+ firstName: `Jasper` (string, required)
-+ lastName: `Zhao` (string, required)
-+ email: `employee@apointer.ca` (string, required)
-+ phone: `4167895678` (string, optional)
-+ avatar: `http://localhost/path` (string, optional)
-
-### Get Customer Response (Get User Response)
-+ credit: `0` (number, required) - Customer credit
-+ registered: `true` (boolean, required) - If this is an registered customer
-
-### Get Appointment Response (object)
-+ aid: `23` (number, required) - Id of Appointment
-+ beginAt: `1521682344` (number, required) - Unix timestamp of appointment begin time
-+ endAt: `1521682344` (number, required) - Unix timestamp of appointment end time
-+ service (Get Service Response, required) - The service for this appointment
-+ employee (Get User Response, required) - The employee for this appointment
-+ customer (Get Customer Response, required) - The customer for this appointment
-
 ### Get Full Appointment Service (object)
 + sid: `11` (number, required) - Id of service
 + name: `Special Service` (string, required)
@@ -116,6 +96,7 @@ Usually happens when creating a resource that already exists.
 + firstName: `Rugal` (string, required)
 + lastName: `Bernstein` (string, required)
 + email: `customer@mail.com` (string, required)
++ phone: `2223334444` (string, optional)
 
 ### Get Full Appointment Employee (object)
 + wid: `11` (number, required) - Id of workspace
@@ -178,32 +159,43 @@ If this appointment is not in `CONFIRM` status.
 
 ### Confirm Appointment [PUT]
 Confirm Appointment with corresponding customer information.  
-In order for `Bloor` to deal with customer information, a header `Anonymous: true` is required.  
 
+This request consists of two phase, customer check and appointment confirmation.  
+1. customer check: `Bloor` will use request header to check and create customer if necessary, and fill `cid` in request header
+2. appointment confirmation: `Union` will use `cid` from request header and the object from request body to confirm an appointment
+
+In request body, the `email` is the service booker, and the `uid` is the service receiver.  
+
+#### Customer Check
+In order for `Bloor` to create an unregistered customer, a header `Anonymous: true` is required.  
+Without this header, `Bloor` will not check customer at all, thus `cid` will not exist.    
+Whenever user confirms an appointment without login, frontend needs to send this header.  
+```
+Anonymous: true
+email: ${email}
+firstName: ${firstName}
+lastName: ${lastName}
+```
+
+Bloor will check the existence of customer.
+1. If exist, set `cid` as `uid` of the customer
+2. Otherwise, create an unregistered customer and set `cid` as `uid`
+
+#### Appointment Confirmation
 Since header information is only for customer creation, the request body is the actual information that we want to book appointment for.  
 Hence always take care of request body.  
+Since after `Bloor` the customer of service receiver must exist.  
 
+1. If we have `cid`, which means this is an anonymous user, confirm appointment with `cid`
+2. Otherwise, it must be an login user, hence, confirm appointment with `uid`
 
-The order of deciding order is like this:  
-
-1. If header includes `Authorization` token, Bloor will ignore others and only copy `uid` as `cid`
-2. If no `Authorization` token, then `email` header is `required` to determine customer identity
-    1. If customer exists, Bloor will pick up the existing customer `uid` as `cid`. In this case other headers will be ignored
-    2. Otherwise, `firstName` and `lastName` are required so Bloor will create new `unregistered` customer and set `uid` as `cid`
+All other fields in request body will just be filled in appointment.  
 
 + Request
     + Attributes (Confirm Appointment Request)
-    + Headers 
-
-            Anonymous: true
-            Authorization: Bearer ${jwt}
-            email: ${email}
-            firstName: ${firstName}
-            lastName: ${lastName}
-            phone: ${phone}
 
 + response 200 (application/json)
-    + Attributes (Get Appointment Response)
+    + Attributes (Get Full Appointment Response)
 
 + response 304
 If this appointment is already in `CONFIRM` status.
