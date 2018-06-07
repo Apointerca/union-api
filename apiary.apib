@@ -175,20 +175,18 @@ firstName: ${firstName}
 lastName: ${lastName}
 ```
 
-When `Bloor` sees the `Anonymous: true` header, it will talk to `Dundas` using the `email`, `firstName` and `lastName` that were set in the header to get the corresponding `uid`.\
-\
-Then, it will set that `uid` as `cid` to pass down the chain.
-\
-\
-`Dundas` will perform the following things when it receives the request from `Bloor`:
-1. If the `email` exists under a registered/unregistered customer, it will return the `uid` of that customer
-2. If the `email` exists under an employee, it will return the `uid` of that employee
-3. If the `email` does not exists, it will create a new unregistered customer account under the `email`, `firstName` and `lastName`.\
-   Then, it returns the `uid` of that newly created account.
+When `Bloor` sees the `Anonymous: true` header, it will talk to `Dundas` using the `email`, `firstName` and `lastName` that were set in the header to get the corresponding `uid`.  
+Then, it will set that `uid` as `cid` to pass down the chain.  
+
+`Dundas` will perform the following things when it receives the request from `Bloor`:  
+1. If the `email` exists under a registered/unregistered customer, it will return the `uid` of that customer  
+2. If the `email` exists under an employee, it will return the `uid` of that employee  
+3. If the `email` does not exists, it will create a new unregistered customer account under the `email`, `firstName` and `lastName`.  
+   Then, it returns the `uid` of that newly created account.  
 
 #### Appointment Confirmation
-Since this action can potentionally support anonymous access, we therefore must only treat `cid` as the only ID of an user.
-All other fields in the request body will just be filled inside appointment.
+Since this action can potentially support anonymous access, we therefore must only treat `cid` as the only ID of an user.  
+All other fields in the request body will just be filled inside appointment.  
 
 > **If ever needs to talk to `Dundas` to get user basic information, remember to call getUsers API in the UserController of `Dundas` as the `cid` could be the `uid` of an existing employee.**
 
@@ -203,6 +201,11 @@ If this appointment is already in `CONFIRM` status.
 
     + Body
 
++ response 410
+If this appointment is not available or the hold status is expired
+
+    + Body
+
 ### Get Appointment [GET]
 Get Appointment with corresponding customer, employee and service information.
 
@@ -211,7 +214,7 @@ Get Appointment with corresponding customer, employee and service information.
 
 ## Find Appointment of Store [/store/{sid}/appointment{?beginAt,endAt}]
 
-### Find Appointment [GET]
+### Find Appointment by Store [GET]
 
 + Parameters
     + sid: `45` (number, required) - Id of store
@@ -223,7 +226,7 @@ Get Appointment with corresponding customer, employee and service information.
 
 ## Find Appointment of Customer [/customer/{uid}/appointment{?beginAt,endAt}]
 
-### Find Appointment [GET]
+### Find Appointment by Customer [GET]
 
 + Parameters
     + uid: `213` (number, required) - Id of customer
@@ -235,7 +238,7 @@ Get Appointment with corresponding customer, employee and service information.
 
 ## Find Appointment of Store Customer [/store/{sid}/customer/{uid}/appointment{?beginAt,endAt}]
 
-### Find Appointment [GET]
+### Find Appointment by Store Customer [GET]
 
 + Parameters
     + sid: `321` (number, required) - Id of store
@@ -409,6 +412,12 @@ This means Aws S3 is down.
 + registered: true (boolean, required) - The registration status of a customer
 + notes (array[Output Note Response]) - The notes a store puts for a customer
 
+### Create Customer Note Request(object)
++ note: `This customer is our first customer.` (string, required) - A new note which a store puts for a customer
+
+### Update Customer Note Request(object)
++ note: `This customer is our first customer.` (string, optional) - A new note which a store wants to change to for an existing note
+
 # Group Customer
 
 ## Store Customers [/store/{sid}/customer]
@@ -425,6 +434,60 @@ All the customers under the requested store are found and their details are retu
 
 + response 404
 The requested store does not exist
+
+    + Body
+
+## Customer Note Create [/customer/{scid}/note]
++ Parameters
+
+    + scid: 1 (number, required) - The id of a store store customer
+
+### Create A Customer Note [POST]
+
++ request (application/json)
+
+    + Attributes (Create Customer Note Request)
+
++ response 201 (application/json)
+A new customer note is created and its details are returned
+
+    + Attributes (Output Note Response)
+
++ response 404
+The requested store customer does not exist
+
+    + Body
+
+## Customer Note Delete And Update [/note/{cnid}]
++ Parameters
+
+    + cnid: 1 (number, required) - The id of a customer note
+
+### Update A Customer Note [PUT]
+
++ request (application/json)
+
+    + Attributes (Update Customer Note Request)
+
++ response 201 (application/json)
+The requested customer note is updated and its new details are returned
+
+    + Attributes (Output Note Response)
+
++ response 404
+The requested customer note does not exist
+
+    + Body
+
+### Delete A Customer Note [DELETE]
+
++ response 200 (application/json)
+The requested customer note is deleted and its details are returned
+
+    + Attributes (Output Note Response)
+
++ response 404
+The requested customer note does not exist
 
     + Body
 # Data Structure
@@ -494,7 +557,7 @@ The requested store does not exist
 
     + Attributes (array[Get Service Case Response], fixed)
 
-## Employees of Store [/stores/{sid}/employees]
+## Store Employees Create and Get [/store/{sid}/employee]
 + Parameters
 
     + sid: 1 (number, required) - Id of a store
@@ -510,11 +573,6 @@ Return the information details of all employees working at this store
 No employees are found at this store or the requested store does not exist
 
     + Body
-
-## New Employee of Store [/stores/{sid}/employee]
-+ Parameters
-
-    + sid: 1 (number, required) - Id of a store
 
 ### Create a New Employee at a Store [POST]
 
@@ -542,7 +600,7 @@ The new employee failed to be created at Dundas. Therefore, Union also failed to
 
     + Body
 
-## Update and Delete Employee of Store [/stores/{sid}/employees/{uid}]
+## Store Employees Update and Delete [/store/{sid}/employee/{uid}]
 + Parameters
 
     + sid: 1 (number, required) - The id of a store
@@ -576,14 +634,14 @@ No employee is found or the given store does not exist
 
     + Body
 
-## Upload an Avatar for an Employee at a Store [/stores/{sid}/employees/{uid}/avatar]
+## Upload an Avatar for an Employee at a Store [/store/{sid}/employee/{uid}/avatar]
 + Parameters
 
     + uid: 1 (number, required) - The id of an employee
     + sid: 1 (number, required) - The id of a store
 
 ### Upload Avatar [POST]
-Please use `name=file` and set the `filename` as the original file name.  
+Please use `name=file` and set the `filename` as the original file name.
 Do not forget to set the `Content-Type`.
 
 + Request (multipart/form-data; boundary=---BOUNDARY)
@@ -624,14 +682,14 @@ The Amazon S3 is not working
 
 # Group Gallery
 
-## Store Gallery Add And Get [/stores/{sid}/gallery]
+## Store Gallery Add And Get [/store/{sid}/gallery]
 + Parameters
 
     + sid: 1 (number, required) - The id of a store
 
 ### Upload An Image [POST]
-Please use `name=file` and set the `filename` as the original file name.  
-Do not forget to set the `Content-Type`. 
+Please use `name=file` and set the `filename` as the original file name.
+Do not forget to set the `Content-Type`.
 
 + Request (multipart/form-data; boundary=---BOUNDARY)
 
@@ -693,76 +751,6 @@ The requested image is successfully deleted from this store
 
 # Data Structure
 
-### Generic Output Note Response
-+ cnid: 1 (number, required) - The id of a customer note
-+ scid: 1 (number, required) - The id of a store customer
-+ note: `This customer is our first customer.` (string, optional) - A note which a store puts for a customer
-+ createdAt: 1527358914 (number, required) - The time when a note was first created
-+ modifiedAt: 1527358988 (number, required) - The timestamp when a note was last modified
-
-### Create Note Request(object)
-+ note: `This customer is our first customer.` (string, required) - A new note which a store puts for a customer
-
-### Update Note Request(object)
-+ note: `This customer is our first customer.` (string, optional) - A new note which a store wants to change to for an existing note
-
-# Group Note
-
-## Customer Note Create [/customer/{scid}/note]
-+ Parameters
-
-    + scid: 1 (number, required) - The id of a store store customer
-
-### Create A Note [POST]
-
-+ request (application/json)
-
-    + Attributes (Create Note Request)
-
-+ response 201 (application/json)
-A new customer note is created and its details are returned
-
-    + Attributes (Generic Output Note Response)
-
-+ response 404
-The requested store customer does not exist
-
-    + Body
-
-## Customer Note Delete And Update [/note/{cnid}]
-+ Parameters
-
-    + cnid: 1 (number, required) - The id of a customer note
-
-### Update A Note [PUT]
-
-+ request (application/json)
-
-    + Attributes (Update Note Request)
-
-+ response 201 (application/json)
-The requested customer note is updated and its new details are returned
-
-    + Attributes (Generic Output Note Response)
-
-+ response 404
-The requested customer note does not exist
-
-    + Body
-
-### Delete A Note [DELETE]
-
-+ response 200 (application/json)
-The requested customer note is deleted and its details are returned
-
-    + Attributes (Generic Output Note Response)
-
-+ response 404
-The requested customer note does not exist
-
-    + Body
-# Data Structure
-
 ### Update Review Request(object)
 + rating: 5 (number, optional) - The new rating for the existing review
 + comment: `This store has fantastic customer service.` (string, optional) - The new comment for the existing review
@@ -789,7 +777,7 @@ The requested customer note does not exist
 
 # Group Review
 
-## Store Reviews Create And Get [/stores/{sid}/review]
+## Store Reviews Create And Get [/store/{sid}/review]
 + Parameters
 
     + sid: 1 (number, required) - The id of a store
@@ -1017,7 +1005,7 @@ This operation will only soft delete the service.
 
 # Group Shift
 
-## Store Shift Create [/stores/{sid}/shift]
+## Store Shift Create [/store/{sid}/shift]
 + Parameters
 
     + sid: 1 (number, required) - The id of a store
@@ -1043,7 +1031,7 @@ The requested store or employee does not exist
 
     + Body
 
-## Store Shift Get [/stores/{sid}/shift?beginat={beginAt}&endat={endAt}]
+## Store Shift Get [/store/{sid}/shift?beginat={beginAt}&endat={endAt}]
 Get all shifts under a particular store between certain start time and end time
 
 + Parameters
