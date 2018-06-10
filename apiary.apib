@@ -206,6 +206,18 @@ If this appointment is not available or the hold status is expired
 
     + Body
 
+## Recheck Appointment Available Time [/appointment/{aid}/recheck{?beginAt,employeeId}]
+### Recheck Appointment Available Time [GET]
++ Parameters
+    + aid: `999` (number, required) - Id of Appointment
+    + beginAt: `1521682344` (number, required) - Target time in `second` unit
+    + employeeId: `123` (number, optional) - Id of employee
+
++ response 200 (application/json)
+    + Attributes (object)
+        + 1521682344 (array[Appointment Availability Response], fixed-type)
+        + 1521692344 (array[Appointment Availability Response], fixed-type)
+
 ### Get Appointment [GET]
 Get Appointment with corresponding customer, employee and service information.
 
@@ -248,6 +260,20 @@ Get Appointment with corresponding customer, employee and service information.
 
 + response 200 (application/json)
     + Attributes (array[Get Full Appointment Response], fixed)
+
+## Update Appointment Detail [/appointment/{aid}/detail]
+### Update Appointment Detail [PUT]
++ Request
+    + Attributes (Confirm Appointment Request)
++ response 200 (application/json)
+    + Attributes (Get Full Appointment Response)
+
+## Update Appointment Time [/appointment/{aid}/time]
+### Update Appointment Time [PUT]
++ request
+    + Attributes (Hold Appointment Request)
++ response 200 (application/json)
+    + Attributes (Get Full Appointment Response)
 
 # Data Structure
 
