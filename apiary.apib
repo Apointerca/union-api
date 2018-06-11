@@ -423,9 +423,11 @@ This means Aws S3 is down.
 ### Output Note Response
 + cnid: 1 (number, required) - The id of a customer note
 + scid: 1 (number, required) - The id of a store customer
-+ note: `This customer is our first customer.` (string, optional) - A note which a store puts for a customer
++ note: `This customer is our first customer.` (string, required) - A note which a store puts for a customer
++ createdBy: `Rugal Bernstein` (string, required) - The name of the employee who first created this note
 + createdAt: 1527358914 (number, required) - The time when a note was first created
-+ modifiedAt: 1527358988 (number, required) - The timestamp when a note was last modified
++ modifiedBy: `Jasper Zhao` (string, optional) - The name of the employee who last updated this note
++ modifiedAt: 1527358988 (number, optional) - The timestamp when a note was last modified
 
 ### Get Customers Response (object)
 + scid: 1 (number, required) - The id of a store customer
@@ -474,13 +476,22 @@ The requested store does not exist
 
     + Attributes (Create Customer Note Request)
 
+    + Headers
+
+            Authorization: Authorization-token
+
 + response 201 (application/json)
 A new customer note is created and its details are returned
 
     + Attributes (Output Note Response)
 
++ response 401
+The store employee who is trying to create a note is unauthorized
+
+    + Body
+
 + response 404
-The requested store customer does not exist
+The store customer/employee does not exist
 
     + Body
 
@@ -495,27 +506,48 @@ The requested store customer does not exist
 
     + Attributes (Update Customer Note Request)
 
+    + Headers
+
+            Authorization: Authorization-token
+
 + response 201 (application/json)
 The requested customer note is updated and its new details are returned
 
     + Attributes (Output Note Response)
 
++ response 401
+The store employee who is trying to update a note is unauthorized
+
+    + Body
+
 + response 404
-The requested customer note does not exist
+The requested customer note/store employee does not exist
 
     + Body
 
 ### Delete A Customer Note [DELETE]
+
++ request
+
+    + Headers
+
+            Authorization: Authorization-token
 
 + response 200 (application/json)
 The requested customer note is deleted and its details are returned
 
     + Attributes (Output Note Response)
 
-+ response 404
-The requested customer note does not exist
++ response 401
+The store employee who is trying to delete a note is unauthorized
 
     + Body
+
++ response 404
+The requested customer note/store employee does not exist
+
+    + Body
+
 # Data Structure
 
 ### Get Store Of Employee (object)
