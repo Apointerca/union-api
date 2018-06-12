@@ -123,6 +123,8 @@ Usually happens when creating a resource that already exists.
 ## Check Appointment [/appointment{?serviceId,beginAt,employeeId}]
 
 ### Check Available Time [GET]
+Check appointment availability before holding a new appointment.  
+
 + Parameters
     + serviceId: `999` (number, required) - Id of service
     + beginAt: `1521682344` (number, required) - Target time in `second` unit
@@ -206,18 +208,6 @@ If this appointment is not available or the hold status is expired
 
     + Body
 
-## Recheck Appointment Available Time [/appointment/{aid}/recheck{?beginAt,employeeId}]
-### Recheck Appointment Available Time [GET]
-+ Parameters
-    + aid: `999` (number, required) - Id of Appointment
-    + beginAt: `1521682344` (number, required) - Target time in `second` unit
-    + employeeId: `123` (number, optional) - Id of employee
-
-+ response 200 (application/json)
-    + Attributes (object)
-        + 1521682344 (array[Appointment Availability Response], fixed-type)
-        + 1521692344 (array[Appointment Availability Response], fixed-type)
-
 ### Get Appointment [GET]
 Get Appointment with corresponding customer, employee and service information.
 
@@ -274,6 +264,20 @@ Get Appointment with corresponding customer, employee and service information.
     + Attributes (Hold Appointment Request)
 + response 200 (application/json)
     + Attributes (Get Full Appointment Response)
+
+## Recheck Appointment Available Time [/appointment/{aid}/recheck{?beginAt,employeeId}]
+### Recheck Appointment Available Time [GET]
+Recheck appointment availability before updating the time of a confirmed appointment.  
+
++ Parameters
+    + aid: `999` (number, required) - Id of Appointment
+    + beginAt: `1521682344` (number, required) - Target time in `second` unit
+    + employeeId: `123` (number, optional) - Id of employee
+
++ response 200 (application/json)
+    + Attributes (object)
+        + 1521682344 (array[Appointment Availability Response], fixed-type)
+        + 1521692344 (array[Appointment Availability Response], fixed-type)
 
 # Data Structure
 
