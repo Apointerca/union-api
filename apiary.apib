@@ -98,14 +98,14 @@ Usually happens when creating a resource that already exists.
 + email: `customer@mail.com` (string, required)
 + phone: `2223334444` (string, optional)
 
-### Get Full Appointment Employee (object)
+### Get Full Appointment Store (object)
 + uid: `21` (number, required) - Id of employee
 + firstName: `Rugal` (string, required)
 + lastName: `Bernstein` (string, required)
 + email: `customer@mail.com` (string, required)
 + phone: `2223334444` (string, optional)
 
-### Get Full Appointment Store (object)
+### Get Full Appointment Employee (object)
 + sid: `11` (number, required) - Id of store
 + name: `Rugal Dental` (string, required)
 + timezone: `America/Toront` (string, required)
@@ -430,7 +430,6 @@ This means Aws S3 is down.
 + email: `customer@apointer.ca` (string, required) - The email of a customer
 + phone: 6478869821 (number, optional) - The phone number of a customer
 + avatar: `http://amazon.s3.com/avatar.img` - The Amazon S3 public url to access the avatar of a customer
-+ registered: true (boolean, required) - The registration status of a customer
 + notes (array[Output Note Response]) - The notes a store puts for a customer
 
 ### Create Customer Note Request(object)
