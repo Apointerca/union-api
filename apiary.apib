@@ -98,15 +98,18 @@ Usually happens when creating a resource that already exists.
 + email: `customer@mail.com` (string, required)
 + phone: `2223334444` (string, optional)
 
-### Get Full Appointment Employee (object)
-+ wid: `11` (number, required) - Id of workspace
+### Get Full Appointment Store (object)
 + uid: `21` (number, required) - Id of employee
-+ name: `Special Service` (string, required)
-+ price: `11.5` (number, required)
 + firstName: `Rugal` (string, required)
 + lastName: `Bernstein` (string, required)
-+ title: `Senior dental` (string, required)
-+ description: `This is description` (string, optional)
++ email: `customer@mail.com` (string, required)
++ phone: `2223334444` (string, optional)
+
+### Get Full Appointment Employee (object)
++ sid: `11` (number, required) - Id of store
++ name: `Rugal Dental` (string, required)
++ timezone: `America/Toront` (string, required)
++ address (Address Response, optional)
 
 ### Get Full Appointment Response (object)
 + aid: `23` (number, required) - Id of Appointment
@@ -117,6 +120,7 @@ Usually happens when creating a resource that already exists.
 + service (Get Full Appointment Service, required)
 + employee (Get Full Appointment Employee, required)
 + customer (Get Full Appointment Customer, required)
++ store (Get Full Appointment Store, required)
 
 # Group Appointment
 
@@ -264,21 +268,6 @@ Get Appointment with corresponding customer, employee and service information.
     + Attributes (Hold Appointment Request)
 + response 200 (application/json)
     + Attributes (Get Full Appointment Response)
-
-## Recheck Appointment Available Time [/appointment/{aid}/recheck{?beginAt,employeeId}]
-### Recheck Appointment Available Time [GET]
-Recheck appointment availability before updating the time of a confirmed appointment.  
-
-+ Parameters
-    + aid: `999` (number, required) - Id of Appointment
-    + beginAt: `1521682344` (number, required) - Target time in `second` unit
-    + employeeId: `123` (number, optional) - Id of employee
-
-+ response 200 (application/json)
-    + Attributes (object)
-        + 1521682344 (array[Appointment Availability Response], fixed-type)
-        + 1521692344 (array[Appointment Availability Response], fixed-type)
-
 # Data Structure
 
 ### Get Business Response (object)
