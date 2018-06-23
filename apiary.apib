@@ -98,12 +98,21 @@ Usually happens when creating a resource that already exists.
 + email: `customer@mail.com` (string, required)
 + phone: `2223334444` (string, optional)
 
+### Get Full Appointment Store Address (object)
++ line1: `123 test rd` (string, required)
++ line2: `special line` (string, optional)
++ city: `Toronto` (string, required)
++ province: `Ontario` (string, required)
++ country: `Canada` (string, required)
++ zip: `X0X0X0` (string, required)
++ longitude: `12.34` (number, optional)
++ latitude: `21.43` (number, optional)
+
 ### Get Full Appointment Store (object)
-+ uid: `21` (number, required) - Id of employee
-+ firstName: `Rugal` (string, required)
-+ lastName: `Bernstein` (string, required)
-+ email: `customer@mail.com` (string, required)
-+ phone: `2223334444` (string, optional)
++ sid: `21` (number, required) - Id of store
++ name: `Rugal Clinic` (string, required)
++ timezone: `Toronto/America` (string, required)
++ address (Get Full Appointment Store Address, required)
 
 ### Get Full Appointment Employee (object)
 + sid: `11` (number, required) - Id of store
@@ -133,6 +142,7 @@ Check appointment availability before holding a new appointment.
     + serviceId: `999` (number, required) - Id of service
     + beginAt: `1521682344` (number, required) - Target time in `second` unit
     + employeeId: `123` (number, optional) - Id of employee
+    + aid: `123` (number, optional) - Id of an existing appoint, only apply for update appointment actions
 
 + response 200 (application/json)
     + Attributes (object)
@@ -268,6 +278,7 @@ Get Appointment with corresponding customer, employee and service information.
     + Attributes (Hold Appointment Request)
 + response 200 (application/json)
     + Attributes (Get Full Appointment Response)
+
 # Data Structure
 
 ### Get Business Response (object)
